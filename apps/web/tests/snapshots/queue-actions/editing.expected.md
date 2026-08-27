@@ -1,0 +1,53 @@
+- banner:
+  - navigation "Session hierarchy":
+    - button "Reply with a one-sentence description" [disabled]
+  - img
+  - text: Standard mode
+  - button "Session log":
+    - text: Session log
+    - img
+  - tablist:
+    - tab "Chat" [selected]
+    - tab "Trajectory"
+- text: Reply with a one-sentence description of event sourcing, then stop. {{clock}}
+- button "Copy":
+  - img
+- button "Context injection @agentbrain-harness/system-prompt":
+  - img
+  - img
+  - text: Context injection @agentbrain-harness/system-prompt
+- button "Context injection skill-catalog":
+  - img
+  - img
+  - text: Context injection skill-catalog
+- button "Context injection agentbrain-context":
+  - img
+  - img
+  - text: Context injection agentbrain-context
+- paragraph: partial
+- status: Deep diving...
+- button "2 queued messages" [disabled] [expanded]
+- list:
+  - listitem:
+    - text: Queue item to remove
+    - button "Edit queued message":
+      - img
+    - button "Remove queued message":
+      - img
+    - button "Steer queued message":
+      - img
+  - listitem:
+    - textbox "Edit queued message": Edited queue item
+    - button "Save queued message":
+      - img
+    - tooltip "Save queued message"
+    - button "Cancel editing":
+      - img
+- textbox "Cmd/Ctrl+Enter steers all queued messages"
+- button "Commands":
+  - img
+- 'button "Access mode, current: Workspace Write"': Workspace Write
+- button "Select model, current gpt-5":
+  - text: gpt-5
+  - img
+- button "Stop generating"

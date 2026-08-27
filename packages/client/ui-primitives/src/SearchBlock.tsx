@@ -1,0 +1,315 @@
+// SearchBlock: the search surface for a completed content or path search — a
+// banner (result summary that folds the pre-cap total in when the tool capped
+// the result, plus a copy control), then either grep matches grouped by file
+// (each file a bold
+// path header with its `lineNumber: line` rows, the group collapsible) or a
+// flat glob path list. Both shapes flatten to one list of rows the height cap
+// slices head/tail over, and neither soft-wraps: a long match line or path
+// scrolls horizontally instead of folding. Geometry mirrors CodeBlock and
+// TerminalBlock so a search card reads as one family with them.
+
+import { useCallback, useState, type ReactNode } from 'react'
+import clsx from 'clsx'
+import { headTailCap } from './head-tail-cap.ts'
+import { ExpandToggle } from './ExpandToggle.tsx'
+import { useCopyFeedback } from './use-copy-feedback.ts'
+import css from './SearchBlock.module.css'
+
+/**
+ * Result rows shown before the height cap collapses the middle. Matches
+ * {@link DEFAULT_TERMINAL_MAX_LINES} so a search card and a terminal card cut a
+ * long result at the same place.
+ */
+export const DEFAULT_SEARCH_MAX_LINES = 16
+
+/** One matched line inside a {@link SearchFileGroup}: its 1-based line number and text. */
+export interface SearchBlockLineMatch {
+  /** 1-based line number of the match within its file. */
+  lineNumber: number
+  /** The matched line text, as the tool surfaced it. */
+  line: string
+}
+
+/** One file's grouped matches, in first-seen file order. */
+export interface SearchFileGroup {
+  /** The file the matches belong to (the display path). */
+  path: string
+  /** The file's matched lines, in output order. */
+  matches: SearchBlockLineMatch[]
+}
+
+/** Fields both search shapes carry (the render site positions; this component draws). */
+interface SearchBlockCommon {
+  /**
+   * Whether the tool capped the inline result: the shape carries only the
+   * retained results, not every result the search found. The banner summary
+   * folds the pre-cap `total` in (`showing X / N …`) so the card never presents
+   * a capped result as complete.
+   */
+  truncated: boolean
+  /** Total results the search found before capping (equals the retained count when not `truncated`). */
+  total: number
+  /** Height cap in rows before the middle collapses (default {@link DEFAULT_SEARCH_MAX_LINES}). */
+  maxLines?: number | undefined
+  /** Extra class merged onto the wrapper. */
+  className?: string | undefined
+  /** Localized display copy; omitted fields keep the built-in defaults. */
+  labels?: Partial<SearchBlockLabels> | undefined
+}
+
+/** Props for the grouped-matches (`grep`) shape. */
+export interface SearchMatchesBlockProps extends SearchBlockCommon {
+  kind: 'matches'
+  /** Matched lines grouped by file, in first-seen file order. */
+  files: SearchFileGroup[]
+}
+
+/** Props for the flat-path (`glob`) shape. */
+export interface SearchPathsBlockProps extends SearchBlockCommon {
+  kind: 'paths'
+  /** The discovered paths, in the tool's result order (the retained page when `truncated`). */
+  paths: string[]
+}
+
+/**
+ * Display copy for the search surface; the owner passes localized labels (this
+ * package is cordis-free, so copy arrives via props). Every field defaults to
+ * the built-in English value, so existing consumers render unchanged. The
+ * summary is built in parts: `count` folds the retained/total pair into one
+ * clause, and the per-shape unit trails it.
+ */
+export interface SearchBlockLabels {
+  /** Count clause for a capped result, given the retained and pre-cap totals. */
+  countTruncated: (shown: number, total: number) => string
+  /** Grep summary: the count clause followed by the file tally. */
+  matchesUnit: (count: string, files: number) => string
+  /** Glob summary: the count clause standing as the path tally. */
+  pathsUnit: (count: string) => string
+  /** Copy-button idle label. */
+  copy: string
+  /** Copy-button label during the post-copy confirmation window. */
+  copied: string
+  /** Placeholder when the search returned no results. */
+  noResults: string
+  /** Collapse-toggle aria label while expanded. */
+  collapseAria: string
+  /** Collapse-toggle text while expanded. */
+  collapse: string
+  /** Expand-toggle aria label while capped, given the hidden row count. */
+  expandAria: (hidden: number) => string
+  /** Expand-toggle text while capped, given the hidden row count. */
+  expand: (hidden: number) => string
+}
+
+const DEFAULT_LABELS: SearchBlockLabels = {
+  countTruncated: (shown, total) => `showing ${shown} / ${total}`,
+  matchesUnit: (count, files) => `${count} matches · ${files} files`,
+  pathsUnit: count => `${count} paths`,
+  copy: 'Copy',
+  copied: 'Copied',
+  noResults: 'No results',
+  collapseAria: 'Collapse results',
+  collapse: 'Collapse',
+  expandAria: hidden => `Expand the remaining ${hidden} result lines`,
+  expand: hidden => `… ${hidden} more lines`,
+}
+
+/** {@link SearchBlock} props: one card, two `kind`-discriminated shapes. */
+export type SearchBlockProps = SearchMatchesBlockProps | SearchPathsBlockProps
+
+/**
+ * One flattened render row. A matches card produces a `file` header row per
+ * group followed by a `match` row per retained line while the group is
+ * expanded; a paths card produces one `path` row per path. The height cap
+ * counts these rows uniformly, so a file header costs one row exactly as a
+ * match line or a path does.
+ */
+type SearchRow =
+  | { type: 'file'; path: string; count: number; index: number; collapsed: boolean }
+  | { type: 'match'; lineNumber: number; line: string; key: string; fileIndex: number }
+  | { type: 'path'; path: string }
+
+/**
+ * The plain-text form the copy control writes: the whole structured result
+ * regardless of the height cap or which groups are collapsed, so the clipboard
+ * carries the result rather than what the card happens to be showing.
+ * @param props - the card's props.
+ * @returns the copyable text, or the empty string for an empty result.
+ */
+function copyText(props: SearchBlockProps): string {
+  if (props.kind === 'paths') return props.paths.join('\n')
+  return props.files
+    .map(file => [file.path, ...file.matches.map(m => `${m.lineNumber}: ${m.line}`)].join('\n'))
+    .join('\n\n')
+}
+
+/**
+ * Number of retained results the card holds: the matched-line count across all
+ * files for a matches card, the path count for a paths card. This is the count
+ * the banner summary reports against `total` when the result was capped.
+ * @param props - the card's props.
+ * @returns the retained result count.
+ */
+function shownCount(props: SearchBlockProps): number {
+  return props.kind === 'paths'
+    ? props.paths.length
+    : props.files.reduce((sum, file) => sum + file.matches.length, 0)
+}
+
+/**
+ * The banner summary. When the search was capped the count clause reads
+ * `showing X / N` so the retained count and the pre-cap total sit together
+ * (mirroring the read card's window note); when it was not capped it is a plain
+ * count of what the card holds. The unit — matches and file tally for grep, path
+ * tally for glob — trails the count either way.
+ * @param props - the card's props.
+ * @param shown - the retained result count from {@link shownCount}.
+ * @param truncated - whether the search was capped.
+ * @param total - the pre-cap total the truncation clause reports.
+ * @param labels - display copy for the summary parts.
+ * @returns the summary text.
+ */
+function summaryText(props: SearchBlockProps, shown: number, truncated: boolean, total: number, labels: SearchBlockLabels): string {
+  const count = truncated ? labels.countTruncated(shown, total) : `${shown}`
+  return props.kind === 'paths'
+    ? labels.pathsUnit(count)
+    : labels.matchesUnit(count, props.files.length)
+}
+
+/**
+ * Flatten a card's shape into its render rows, dropping a collapsed file
+ * group's match rows.
+ * @param props - the card's props.
+ * @param collapsed - the set of collapsed file-group indices (matches only).
+ * @returns the flattened rows in output order.
+ */
+function toRows(props: SearchBlockProps, collapsed: ReadonlySet<number>): SearchRow[] {
+  if (props.kind === 'paths') return props.paths.map((path): SearchRow => ({ type: 'path', path }))
+  const rows: SearchRow[] = []
+  props.files.forEach((file, index) => {
+    const isCollapsed = collapsed.has(index)
+    rows.push({ type: 'file', path: file.path, count: file.matches.length, index, collapsed: isCollapsed })
+    if (isCollapsed) return
+    for (const match of file.matches) {
+      rows.push({ type: 'match', lineNumber: match.lineNumber, line: match.line, key: `${index}:${match.lineNumber}`, fileIndex: index })
+    }
+  })
+  return rows
+}
+
+/**
+ * A stable React key for a flattened render row: the group-scoped match key, a
+ * file-index-scoped header key, or the path itself. Rows of different types
+ * never collide, since each key carries its type prefix or the group index.
+ * @param row - the flattened row.
+ * @returns the key.
+ */
+function rowKey(row: SearchRow): string {
+  switch (row.type) {
+    case 'match': return `match:${row.key}`
+    case 'file': return `file:${row.index}`
+    case 'path': return `path:${row.path}`
+  }
+}
+
+/**
+ * Render a completed search as a grouped-matches or flat-path card.
+ * @param props - see {@link SearchBlockProps}.
+ * @returns the search block element.
+ */
+export function SearchBlock(props: SearchBlockProps) {
+  const { truncated, total, maxLines = DEFAULT_SEARCH_MAX_LINES, className, labels } = props
+  const copy = labels === undefined ? DEFAULT_LABELS : { ...DEFAULT_LABELS, ...labels }
+  const [expanded, setExpanded] = useState(false)
+  const [collapsed, setCollapsed] = useState<ReadonlySet<number>>(() => new Set())
+
+  // `props` is a fresh object each render, so memoizing on it never hits; the
+  // flatten is cheap, so it runs inline keyed on the collapse set instead.
+  const rows = toRows(props, collapsed)
+  const shown = shownCount(props)
+  const empty = rows.length === 0
+  const { copied, onCopy } = useCopyFeedback(copyText(props))
+
+  const onToggle = useCallback(() => { setExpanded(value => !value) }, [])
+
+  const toggleFile = useCallback((index: number) => {
+    setCollapsed((prev) => {
+      const next = new Set(prev)
+      if (next.has(index)) next.delete(index)
+      else next.add(index)
+      return next
+    })
+  }, [])
+
+  const { hidden, capped, headLines, tailLines } = headTailCap(rows.length, maxLines, expanded)
+  const head = capped ? rows.slice(0, headLines) : rows
+  const naturalTail = capped ? rows.slice(rows.length - tailLines) : []
+  // When the tail slice begins inside a file's matches, its own header sits
+  // above the cut and is not shown, so those rows could not be attributed to a
+  // file. Restore the owning header at the top of the tail — unless the head
+  // slice already carries it (a single large file), where it would duplicate.
+  const tailLead = naturalTail[0]
+  const tailHeader = tailLead?.type === 'match'
+    && !head.some(row => row.type === 'file' && row.index === tailLead.fileIndex)
+    ? rows.find((row): row is Extract<SearchRow, { type: 'file' }> =>
+      row.type === 'file' && row.index === tailLead.fileIndex)
+    : undefined
+  // The restored header is itself a row. Left extra it would push the card to
+  // maxLines + 1 and overstate `hidden` by one, so it consumes a tail slot: drop
+  // the tail's first row (the match whose header this is) for it. Visible rows
+  // hold at maxLines and `hidden` stays exact; the dropped match joins the
+  // hidden middle.
+  const tail = tailHeader === undefined ? naturalTail : naturalTail.slice(1)
+
+  const renderRow = (row: SearchRow): ReactNode => {
+    if (row.type === 'path') return <div className={css.line}>{row.path}</div>
+    if (row.type === 'match') {
+      return (
+        <div className={css.line}>
+          <span className={css.lineNumber}>{row.lineNumber}: </span>
+          {row.line}
+        </div>
+      )
+    }
+    return (
+      <button
+        type="button"
+        className={css.fileHeader}
+        aria-expanded={!row.collapsed}
+        onClick={() => { toggleFile(row.index) }}
+      >
+        <span className={css.filePath}>{row.path}</span>
+        <span className={css.fileCount}>{row.count}</span>
+      </button>
+    )
+  }
+
+  return (
+    <div className={clsx(css.block, className)} data-search={props.kind}>
+      <div className={css.header}>
+        <span className={css.summary}>{summaryText(props, shown, truncated, total, copy)}</span>
+        {!empty && (
+          <button type="button" className={css.copyButton} onClick={onCopy}>
+            {copied ? copy.copied : copy.copy}
+          </button>
+        )}
+      </div>
+      {empty
+        ? <div className={css.empty}>{copy.noResults}</div>
+        : (
+          <div className={css.body}>
+            {head.map(row => (
+              <div key={rowKey(row)}>{renderRow(row)}</div>
+            ))}
+            <ExpandToggle hidden={hidden} expanded={expanded} onToggle={onToggle} className={css.expand} copy={copy} />
+            {tailHeader !== undefined && (
+              <div key={`tailHeader:${rowKey(tailHeader)}`}>{renderRow(tailHeader)}</div>
+            )}
+            {tail.map(row => (
+              <div key={rowKey(row)}>{renderRow(row)}</div>
+            ))}
+          </div>
+        )}
+    </div>
+  )
+}

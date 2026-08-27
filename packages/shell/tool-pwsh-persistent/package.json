@@ -1,0 +1,62 @@
+{
+  "name": "@agentbrain-harness/tool-pwsh-persistent",
+  "description": "Model-facing owner-scoped persistent PowerShell tool backed by the Harness PTY service",
+  "version": "0.1.0-rc.8",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frontmatters/agentbrain-harness.git",
+    "directory": "packages/shell/tool-pwsh-persistent"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./invariant": {
+      "types": "./lib/types/invariant.d.ts",
+      "default": "./lib/invariant.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/invariant.js",
+    "lib/types/**/*.d.ts"
+  ],
+  "license": "MIT",
+  "peerDependencies": {
+    "@agentbrain-harness/agent": "workspace:^",
+    "@agentbrain-harness/invariants": "workspace:^",
+    "@agentbrain-harness/terminal": "workspace:^",
+    "@agentbrain-harness/timeout": "workspace:^",
+    "@agentbrain-harness/tools": "workspace:^",
+    "@agentbrain-harness/cordis": "workspace:^"
+  },
+  "dependencies": {
+    "@agentbrain-harness/schemastery": "workspace:^"
+  },
+  "devDependencies": {
+    "@agentbrain-harness/cordis-plugin-include": "workspace:^",
+    "@agentbrain-harness/cordis-plugin-loader": "workspace:^",
+    "@agentbrain-harness/agent": "workspace:^",
+    "@agentbrain-harness/invariants": "workspace:^",
+    "@agentbrain-harness/llm": "workspace:^",
+    "@agentbrain-harness/terminal": "workspace:^",
+    "@agentbrain-harness/terminal-bash": "workspace:^",
+    "@agentbrain-harness/pwsh-local": "workspace:^",
+    "@agentbrain-harness/sandbox": "workspace:^",
+    "@agentbrain-harness/sandbox-policy": "workspace:^",
+    "@agentbrain-harness/session": "workspace:^",
+    "@agentbrain-harness/subprocess-local": "workspace:^",
+    "@agentbrain-harness/system-prompt": "workspace:^",
+    "@agentbrain-harness/timeout": "workspace:^",
+    "@agentbrain-harness/tools": "workspace:^",
+    "@agentbrain-harness/cordis": "workspace:^"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": { "rootDir": "src", "outDir": "lib/types" },
+  "include": ["src/**/*.ts"],
+  "references": [
+    { "path": "../../fs/fs" },
+    { "path": "../../util/home-paths" },
+    { "path": "../../runtime-diagnostics/invariants" },
+    { "path": "../../shell/shell" },
+    { "path": "../../core/system-prompt" },
+    { "path": "../../core/tools" },
+    { "path": "../../../vendor/cordis" }
+  ]
+}

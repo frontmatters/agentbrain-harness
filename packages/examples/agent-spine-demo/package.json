@@ -1,0 +1,100 @@
+{
+  "name": "@agentbrain-harness/agent-spine-demo",
+  "description": "The default executor-less/UI-less agent spine with fallback session titles, provider-routed retry, and optional persisted goals",
+  "version": "0.1.0-rc.8",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frontmatters/agentbrain-harness.git",
+    "directory": "packages/examples/agent-spine-demo"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./invariant": {
+      "types": "./lib/types/invariant.d.ts",
+      "default": "./lib/invariant.js"
+    },
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/invariant.js",
+    "lib/types/**/*.d.ts"
+  ],
+  "license": "MIT",
+  "peerDependencies": {
+    "@agentbrain-harness/cordis-plugin-timer": "workspace:^",
+    "@agentbrain-harness/agent": "workspace:^",
+    "@agentbrain-harness/agent-loop": "workspace:^",
+    "@agentbrain-harness/goal": "workspace:^",
+    "@agentbrain-harness/goal-round-driver": "workspace:^",
+    "@agentbrain-harness/invariants": "workspace:^",
+    "@agentbrain-harness/llm": "workspace:^",
+    "@agentbrain-harness/home-paths": "workspace:^",
+    "@agentbrain-harness/llm-retry": "workspace:^",
+    "@agentbrain-harness/scope": "workspace:^",
+    "@agentbrain-harness/session": "workspace:^",
+    "@agentbrain-harness/session-title": "workspace:^",
+    "@agentbrain-harness/skill": "workspace:^",
+    "@agentbrain-harness/skill-filesystem": "workspace:^",
+    "@agentbrain-harness/system-prompt": "workspace:^",
+    "@agentbrain-harness/jobs-local": "workspace:^",
+    "@agentbrain-harness/shell-env": "workspace:^",
+    "@agentbrain-harness/tool-bash": "workspace:^",
+    "@agentbrain-harness/tool-goal": "workspace:^",
+    "@agentbrain-harness/tool-skill": "workspace:^",
+    "@agentbrain-harness/tool-jobs": "workspace:^",
+    "@agentbrain-harness/tools": "workspace:^",
+    "@agentbrain-harness/agent-instructions": "workspace:^",
+    "@agentbrain-harness/cordis": "workspace:^"
+  },
+  "devDependencies": {
+    "@agentbrain-harness/cordis-plugin-timer": "workspace:^",
+    "@agentbrain-harness/agent": "workspace:^",
+    "@agentbrain-harness/agent-loop": "workspace:^",
+    "@agentbrain-harness/shell-env": "workspace:^",
+    "@agentbrain-harness/bash-local": "workspace:^",
+    "@agentbrain-harness/bash-sandbox": "workspace:^",
+    "@agentbrain-harness/fs-local": "workspace:^",
+    "@agentbrain-harness/fs-observation-policy": "workspace:^",
+    "@agentbrain-harness/fs-sandbox": "workspace:^",
+    "@agentbrain-harness/goal": "workspace:^",
+    "@agentbrain-harness/goal-round-driver": "workspace:^",
+    "@agentbrain-harness/invariants": "workspace:^",
+    "@agentbrain-harness/llm": "workspace:^",
+    "@agentbrain-harness/home-paths": "workspace:^",
+    "@agentbrain-harness/llm-retry": "workspace:^",
+    "@agentbrain-harness/subprocess-local": "workspace:^",
+    "@agentbrain-harness/sandbox-local": "workspace:^",
+    "@agentbrain-harness/sandbox-policy": "workspace:^",
+    "@agentbrain-harness/scope": "workspace:^",
+    "@agentbrain-harness/session": "workspace:^",
+    "@agentbrain-harness/session-title": "workspace:^",
+    "@agentbrain-harness/skill": "workspace:^",
+    "@agentbrain-harness/skill-filesystem": "workspace:^",
+    "@agentbrain-harness/system-prompt": "workspace:^",
+    "@agentbrain-harness/jobs": "workspace:^",
+    "@agentbrain-harness/jobs-local": "workspace:^",
+    "@agentbrain-harness/tool-bash": "workspace:^",
+    "@agentbrain-harness/tool-fs": "workspace:^",
+    "@agentbrain-harness/tool-goal": "workspace:^",
+    "@agentbrain-harness/tool-skill": "workspace:^",
+    "@agentbrain-harness/tool-jobs": "workspace:^",
+    "@agentbrain-harness/tools": "workspace:^",
+    "@agentbrain-harness/agent-instructions": "workspace:^",
+    "@agentbrain-harness/node-addon-landlock-run": "workspace:^",
+    "@agentbrain-harness/cordis": "workspace:^"
+  },
+  "dependencies": {
+    "@agentbrain-harness/schemastery": "workspace:^"
+  }
+}

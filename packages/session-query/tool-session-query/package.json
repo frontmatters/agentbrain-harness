@@ -1,0 +1,63 @@
+{
+  "name": "@agentbrain-harness/tool-session-query",
+  "description": "Workspace-authorized model-facing session history search, trace, and event read tools",
+  "version": "0.1.0-rc.8",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frontmatters/agentbrain-harness.git",
+    "directory": "packages/session-query/tool-session-query"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./invariant": {
+      "types": "./lib/types/invariant.d.ts",
+      "default": "./lib/invariant.js"
+    },
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/invariant.js",
+    "lib/types/**/*.d.ts"
+  ],
+  "license": "MIT",
+  "peerDependencies": {
+    "@agentbrain-harness/invariants": "workspace:^",
+    "@agentbrain-harness/llm": "workspace:^",
+    "@agentbrain-harness/session": "workspace:^",
+    "@agentbrain-harness/session-query": "workspace:^",
+    "@agentbrain-harness/system-prompt": "workspace:^",
+    "@agentbrain-harness/timeout": "workspace:^",
+    "@agentbrain-harness/tools": "workspace:^",
+    "@agentbrain-harness/cordis": "workspace:^"
+  },
+  "dependencies": {
+    "@agentbrain-harness/schemastery": "workspace:^"
+  },
+  "devDependencies": {
+    "@agentbrain-harness/agent": "workspace:^",
+    "@agentbrain-harness/invariants": "workspace:^",
+    "@agentbrain-harness/llm": "workspace:^",
+    "@agentbrain-harness/session": "workspace:^",
+    "@agentbrain-harness/session-persistence": "workspace:^",
+    "@agentbrain-harness/session-persistence-jsonl": "workspace:^",
+    "@agentbrain-harness/session-query": "workspace:^",
+    "@agentbrain-harness/session-query-sqlite": "workspace:^",
+    "@agentbrain-harness/session-title": "workspace:^",
+    "@agentbrain-harness/system-prompt": "workspace:^",
+    "@agentbrain-harness/timeout": "workspace:^",
+    "@agentbrain-harness/tool-call-timeout-policy": "workspace:^",
+    "@agentbrain-harness/tools": "workspace:^",
+    "@agentbrain-harness/cordis": "workspace:^"
+  }
+}

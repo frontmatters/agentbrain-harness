@@ -1,0 +1,47 @@
+- banner:
+  - navigation "Session hierarchy":
+    - button "Begin your reply with the" [disabled]
+  - img
+  - text: Standard mode
+  - button "Session log":
+    - text: Session log
+    - img
+  - tablist:
+    - tab "Chat" [selected]
+    - tab "Trajectory"
+- text: Begin your reply with the plain sentence "Reading the workspace now." as text, and in that same message call the bash tool with the command "echo alpha". After the tool result, reply with the single word DONE and stop. {{clock}}
+- button "Copy":
+  - img
+- tooltip "Copy"
+- button "Context injection @agentbrain-harness/system-prompt":
+  - img
+  - img
+  - text: Context injection @agentbrain-harness/system-prompt
+- button "Context injection skill-catalog":
+  - img
+  - img
+  - text: Context injection skill-catalog
+- button "Context injection agentbrain-context":
+  - img
+  - img
+  - text: Context injection agentbrain-context
+- button "Think The user wants me to begin with \"Reading the workspace now.\" and call bash with \"echo alpha\" in the same message. Then after the tool result, reply with the single word DONE and stop.":
+  - img
+  - img
+  - text: Think The user wants me to begin with "Reading the workspace now." and call bash with "echo alpha" in the same message. Then after the tool result, reply with the single word DONE and stop.
+- paragraph: Reading the workspace now.
+- 'button "Failed Bash Error: sandbox mode \"workspace-write\" is requested but no sandbox backend is usable on this host; refusing to run the command unconfined. Install bubblewrap or run a Landlock-enforcing kernel (Linux), ensure sandbox-exec is usable (macOS), or ensure the ACL restricted-token runner can start (Windows) — otherwise switch the consumer to danger-full-access. Runner failure: sandbox-exec: sandbox_apply: Operation not permitted"':
+  - img
+  - text: "Failed Bash Error: sandbox mode \"workspace-write\" is requested but no sandbox backend is usable on this host; refusing to run the command unconfined. Install bubblewrap or run a Landlock-enforcing kernel (Linux), ensure sandbox-exec is usable (macOS), or ensure the ACL restricted-token runner can start (Windows) — otherwise switch the consumer to danger-full-access. Runner failure: sandbox-exec: sandbox_apply: Operation not permitted"
+- paragraph: partial
+- status: Deep diving...
+- textbox "Message the agent"
+- button "Commands":
+  - img
+- 'button "Access mode, current: Workspace Write"': Workspace Write
+- button "Select model, current gpt-5":
+  - text: gpt-5
+  - img
+- button "6% of context used"
+- button "Stop generating"
+- text: 1 turns · 1 steps LLM {{duration}} · Tool call {{duration}} TTFT avg {{duration}} · {{throughput}} tok/s Cache hit 0% Input 7.8K tok · Output 109 tok

@@ -1,0 +1,68 @@
+{
+  "name": "@agentbrain-harness/tool-terminal",
+  "description": "Six model-facing persistent PTY tools with owner isolation and generic background-job integration",
+  "version": "0.1.0-rc.8",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frontmatters/agentbrain-harness.git",
+    "directory": "packages/terminal/tool-terminal"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./invariant": {
+      "types": "./lib/types/invariant.d.ts",
+      "default": "./lib/invariant.js"
+    },
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/invariant.js",
+    "lib/types/**/*.d.ts"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@agentbrain-harness/schemastery": "workspace:^"
+  },
+  "peerDependencies": {
+    "@agentbrain-harness/agent": "workspace:^",
+    "@agentbrain-harness/invariants": "workspace:^",
+    "@agentbrain-harness/llm": "workspace:^",
+    "@agentbrain-harness/terminal": "workspace:^",
+    "@agentbrain-harness/output-retention": "workspace:^",
+    "@agentbrain-harness/system-prompt": "workspace:^",
+    "@agentbrain-harness/jobs": "workspace:^",
+    "@agentbrain-harness/tools": "workspace:^",
+    "@agentbrain-harness/cordis": "workspace:^"
+  },
+  "devDependencies": {
+    "@agentbrain-harness/cordis-plugin-include": "workspace:^",
+    "@agentbrain-harness/cordis-plugin-loader": "workspace:^",
+    "@agentbrain-harness/agent": "workspace:^",
+    "@agentbrain-harness/invariants": "workspace:^",
+    "@agentbrain-harness/llm": "workspace:^",
+    "@agentbrain-harness/terminal": "workspace:^",
+    "@agentbrain-harness/terminal-bash": "workspace:^",
+    "@agentbrain-harness/output-retention": "workspace:^",
+    "@agentbrain-harness/sandbox": "workspace:^",
+    "@agentbrain-harness/sandbox-policy": "workspace:^",
+    "@agentbrain-harness/session": "workspace:^",
+    "@agentbrain-harness/subprocess-local": "workspace:^",
+    "@agentbrain-harness/system-prompt": "workspace:^",
+    "@agentbrain-harness/jobs": "workspace:^",
+    "@agentbrain-harness/jobs-local": "workspace:^",
+    "@agentbrain-harness/tool-jobs": "workspace:^",
+    "@agentbrain-harness/tools": "workspace:^",
+    "@agentbrain-harness/cordis": "workspace:^"
+  }
+}

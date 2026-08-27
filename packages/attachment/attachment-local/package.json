@@ -1,0 +1,40 @@
+{
+  "name": "@agentbrain-harness/attachment-local",
+  "description": "Private content-addressed ABH_HOME attachment storage",
+  "version": "0.1.0-rc.8",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frontmatters/agentbrain-harness.git",
+    "directory": "packages/attachment/attachment-local"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": { "types": "./lib/types/index.d.ts", "default": "./lib/index.js" },
+    "./invariant": { "types": "./lib/types/invariant.d.ts", "default": "./lib/invariant.js" },
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
+  },
+  "files": ["lib/index.js", "lib/invariant.js", "lib/types/**/*.d.ts"],
+  "license": "MIT",
+  "peerDependencies": {
+    "@agentbrain-harness/attachment": "workspace:^",
+    "@agentbrain-harness/invariants": "workspace:^",
+    "@agentbrain-harness/home-paths": "workspace:^",
+    "@agentbrain-harness/cordis": "workspace:^"
+  },
+  "dependencies": {
+    "@agentbrain-harness/schemastery": "workspace:^",
+    "sharp": "^0.35.3"
+  },
+  "devDependencies": {
+    "@agentbrain-harness/attachment": "workspace:^",
+    "@agentbrain-harness/invariants": "workspace:^",
+    "@agentbrain-harness/home-paths": "workspace:^",
+    "@agentbrain-harness/cordis": "workspace:^"
+  }
+}

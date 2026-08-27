@@ -1,0 +1,17 @@
+# Filesystem-scenario overlay: the sandboxed filesystem stack already lives in
+# the base cordis.yml, so this overlay adds only the local tool-result spill
+# storage those scenarios exercise.
+- id: base
+  name: '@agentbrain-harness/cordis-plugin-include'
+  config:
+    path: ./cordis.yml
+    patches:
+      - insert:
+          - id: spill-local
+            name: '@agentbrain-harness/spill-local'
+            config:
+              root: !!js process.env.ABH_SNAPSHOT_SPILL_ROOT ?? './.spill'
+          - id: spill-policy
+            name: '@agentbrain-harness/spill-policy'
+            config:
+              maxInlineBytes: !!js process.env.ABH_SNAPSHOT && 800 || 50000

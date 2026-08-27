@@ -1,0 +1,15 @@
+- dialog "Connect a model to get started":
+  - heading "Connect a model to get started" [level=2]
+  - paragraph: Sign in with your account — no API key needed. You can add more providers later.
+  - button "Continue with ChatGPT"
+  - button "Sign in with Claude": Claude
+  - button "Sign in with Grok": Grok
+  - button "Sign in with GitHub Copilot": GitHub Copilot
+  - button "Sign in with Kimi For Coding": Kimi For Coding
+  - button "Sign in with OpenRouter": OpenRouter
+  - text: or connect another way API key
+  - textbox "API key":
+    - /placeholder: Enter an API key, or leave blank to use environment authentication
+  - button "Back"
+  - button "Save and continue" [disabled]
+  - button "Configure later"

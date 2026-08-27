@@ -1,0 +1,20 @@
+.frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0 24px 20px;
+  min-height: 54px;
+  padding: 10px 16px;
+  border: 1px solid var(--ab-web-alias-border-l2);
+  border-radius: 14px;
+  background: var(--ab-web-alias-bg-layer-1);
+  color: var(--ab-web-alias-label-tertiary);
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.frame strong {
+  color: var(--ab-web-alias-label-primary);
+  font-weight: 510;
+}

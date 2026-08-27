@@ -1,0 +1,133 @@
+{
+  "name": "@agentbrain-harness/web-app",
+  "description": "The abh browser-surface bundle: the web patch layer over abh-base plus the runtime glue plugin (frontend dist serving, web-surface prompt, bash runtime variables, URL line)",
+  "version": "0.1.0-rc.8",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frontmatters/agentbrain-harness.git",
+    "directory": "packages/bundle/web-app"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./startup": {
+      "types": "./lib/types/startup.d.ts",
+      "default": "./lib/startup.js"
+    },
+    "./invariant": {
+      "types": "./lib/types/invariant.d.ts",
+      "default": "./lib/invariant.js"
+    },
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/invariant.js",
+    "lib/startup.js",
+    "cordis.patch.yml",
+    "lib/types/**/*.d.ts"
+  ],
+  "license": "MIT",
+  "abh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "dependencies": {
+    "@agentbrain-harness/agent-presets": "workspace:^",
+    "@agentbrain-harness/api-remotes": "workspace:^",
+    "@agentbrain-harness/app-boot": "workspace:^",
+    "@agentbrain-harness/client-connection": "workspace:^",
+    "@agentbrain-harness/client-hmr": "workspace:^",
+    "@agentbrain-harness/client-locale": "workspace:^",
+    "@agentbrain-harness/client-modules": "workspace:^",
+    "@agentbrain-harness/client-ui-renderer": "workspace:^",
+    "@agentbrain-harness/client-runtime": "workspace:^",
+    "@agentbrain-harness/client-ui-agent-preset": "workspace:^",
+    "@agentbrain-harness/client-ui-attachment": "workspace:^",
+    "@agentbrain-harness/client-ui-brand-official": "workspace:^",
+    "@agentbrain-harness/client-ui-commands": "workspace:^",
+    "@agentbrain-harness/client-ui-conversation": "workspace:^",
+    "@agentbrain-harness/client-ui-cordis": "workspace:^",
+    "@agentbrain-harness/client-ui-deliverables": "workspace:^",
+    "@agentbrain-harness/client-ui-directory-picker-browse": "workspace:^",
+    "@agentbrain-harness/client-ui-directory-picker-native": "workspace:^",
+    "@agentbrain-harness/client-ui-message-feedback": "workspace:^",
+    "@agentbrain-harness/client-ui-goal": "workspace:^",
+    "@agentbrain-harness/client-ui-layout": "workspace:^",
+    "@agentbrain-harness/client-ui-model-selection": "workspace:^",
+    "@agentbrain-harness/client-ui-settings-models": "workspace:^",
+    "@agentbrain-harness/client-ui-settings-plugin-inventory": "workspace:^",
+    "@agentbrain-harness/client-ui-settings-addons": "workspace:^",
+    "@agentbrain-harness/client-ui-permission-presets": "workspace:^",
+    "@agentbrain-harness/client-ui-plan": "workspace:^",
+    "@agentbrain-harness/client-ui-settings-plugins": "workspace:^",
+    "@agentbrain-harness/client-ui-user-questions": "workspace:^",
+    "@agentbrain-harness/client-ui-settings": "workspace:^",
+    "@agentbrain-harness/client-ui-settings-general": "workspace:^",
+    "@agentbrain-harness/client-ui-sidebar": "workspace:^",
+    "@agentbrain-harness/client-ui-skill": "workspace:^",
+    "@agentbrain-harness/client-ui-input-trigger": "workspace:^",
+    "@agentbrain-harness/client-ui-reference": "workspace:^",
+    "@agentbrain-harness/client-ui-subagent": "workspace:^",
+    "@agentbrain-harness/client-ui-jobs": "workspace:^",
+    "@agentbrain-harness/client-ui-theme": "workspace:^",
+    "@agentbrain-harness/client-ui-tool": "workspace:^",
+    "@agentbrain-harness/client-ui-workflow-run": "workspace:^",
+    "@agentbrain-harness/client-ui-trajectory": "workspace:^",
+    "@agentbrain-harness/client-ui-workspace": "workspace:^",
+    "@agentbrain-harness/cmdline": "workspace:^",
+    "@agentbrain-harness/code-runtime-worker-thread": "workspace:^",
+    "@agentbrain-harness/cordis-client-runner": "workspace:^",
+    "@agentbrain-harness/cordis-host-runner": "workspace:^",
+    "@agentbrain-harness/web-frontend": "workspace:^",
+    "@agentbrain-harness/host-frontend-static": "workspace:^",
+    "@agentbrain-harness/host-apiproxy": "workspace:^",
+    "@agentbrain-harness/host-directory-picker-auto": "workspace:^",
+    "@agentbrain-harness/host-directory-picker-browse": "workspace:^",
+    "@agentbrain-harness/host-directory-picker-native": "workspace:^",
+    "@agentbrain-harness/host-plugin-inventory": "workspace:^",
+    "@agentbrain-harness/host-agentbrain-addons": "workspace:^",
+    "@agentbrain-harness/host-webserver": "workspace:^",
+    "@agentbrain-harness/file-reference": "workspace:^",
+    "@agentbrain-harness/file-reference-local": "workspace:^",
+    "@agentbrain-harness/launch-environment": "workspace:^",
+    "@agentbrain-harness/message-feedback": "workspace:^",
+    "@agentbrain-harness/session-projection-cache": "workspace:^",
+    "@agentbrain-harness/session-reference": "workspace:^",
+    "@agentbrain-harness/session-log-export": "workspace:^",
+    "@agentbrain-harness/session-stats": "workspace:^",
+    "@agentbrain-harness/storage": "workspace:^",
+    "@agentbrain-harness/storage-domain": "workspace:^",
+    "@agentbrain-harness/storage-json": "workspace:^",
+    "@agentbrain-harness/subprocess": "workspace:^",
+    "@agentbrain-harness/workspace": "workspace:^",
+    "@agentbrain-harness/schemastery": "workspace:^",
+    "commander": "^15.0.0",
+    "open": "^11.0.0"
+  },
+  "peerDependencies": {
+    "@agentbrain-harness/cordis-plugin-loader": "workspace:^",
+    "@agentbrain-harness/shell-env": "workspace:^",
+    "@agentbrain-harness/invariants": "workspace:^",
+    "@agentbrain-harness/system-prompt": "workspace:^",
+    "@agentbrain-harness/cordis": "workspace:^"
+  },
+  "devDependencies": {
+    "@agentbrain-harness/cordis-plugin-loader": "workspace:^",
+    "@agentbrain-harness/shell-env": "workspace:^",
+    "@agentbrain-harness/invariants": "workspace:^",
+    "@agentbrain-harness/system-prompt": "workspace:^",
+    "@agentbrain-harness/cordis": "workspace:^"
+  }
+}

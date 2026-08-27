@@ -1,0 +1,95 @@
+{
+  "name": "@agentbrain-harness/host-apiproxy",
+  "description": "API gateway: the ApiProxy contract (api/), the fetch carrier pair (fetch/), and the host-side gateway plugin providing ctx.apiProxy",
+  "version": "0.1.0-rc.8",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frontmatters/agentbrain-harness.git",
+    "directory": "packages/host/apiproxy"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./invariant": {
+      "types": "./lib/types/invariant.d.ts",
+      "default": "./lib/invariant.js"
+    },
+    "./src/*": "./src/*",
+    "./package.json": "./package.json",
+    "./api": {
+      "types": "./lib/types/api/index.d.ts",
+      "default": "./lib/types/api/index.js"
+    },
+    "./api/*": {
+      "types": "./lib/types/api/*.d.ts",
+      "default": "./lib/types/api/*.js"
+    },
+    "./client": {
+      "types": "./lib/types/fetch/client.d.ts",
+      "default": "./lib/types/fetch/client.js"
+    }
+  },
+  "files": [
+    "lib/index.js",
+    "lib/invariant.js",
+    "lib/types/**/*.js",
+    "lib/types/**/*.d.ts"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@agentbrain-harness/attachment": "workspace:^",
+    "@agentbrain-harness/agent": "workspace:^",
+    "@agentbrain-harness/agent-default-model": "workspace:^",
+    "@agentbrain-harness/api-remotes": "workspace:^",
+    "@agentbrain-harness/brand": "workspace:^",
+    "@agentbrain-harness/commands": "workspace:^",
+    "@agentbrain-harness/credentials": "workspace:^",
+    "@agentbrain-harness/goal": "workspace:^",
+    "@agentbrain-harness/host-directory-picker": "workspace:^",
+    "@agentbrain-harness/llm": "workspace:^",
+    "@agentbrain-harness/native-command": "workspace:^",
+    "@agentbrain-harness/session": "workspace:^",
+    "@agentbrain-harness/session-persistence": "workspace:^",
+    "@agentbrain-harness/session-projection": "workspace:^",
+    "@agentbrain-harness/session-projection-cache": "workspace:^",
+    "@agentbrain-harness/session-query": "workspace:^",
+    "@agentbrain-harness/session-title": "workspace:^",
+    "@agentbrain-harness/settings": "workspace:^",
+    "@agentbrain-harness/skill": "workspace:^",
+    "@agentbrain-harness/subagent": "workspace:^",
+    "@agentbrain-harness/jobs": "workspace:^",
+    "@agentbrain-harness/tools": "workspace:^",
+    "@agentbrain-harness/user-approval": "workspace:^",
+    "@agentbrain-harness/user-questions": "workspace:^",
+    "@agentbrain-harness/workspace": "workspace:^",
+    "@agentbrain-harness/schemastery": "workspace:^",
+    "fflate": "^0.8.2",
+    "zod": "^4.4.3"
+  },
+  "peerDependencies": {
+    "@agentbrain-harness/cordis": "workspace:^",
+    "@agentbrain-harness/agent-presets": "workspace:^",
+    "@agentbrain-harness/cordis-host-runner": "workspace:^",
+    "@agentbrain-harness/invariants": "workspace:^",
+    "@agentbrain-harness/authorization": "workspace:^"
+  },
+  "devDependencies": {
+    "@agentbrain-harness/cordis": "workspace:^",
+    "@agentbrain-harness/agent-presets": "workspace:^",
+    "@agentbrain-harness/cordis-host-runner": "workspace:^",
+    "@agentbrain-harness/invariants": "workspace:^",
+    "@agentbrain-harness/authorization": "workspace:^",
+    "@agentbrain-harness/storage": "workspace:^",
+    "@agentbrain-harness/storage-domain": "workspace:^",
+    "@agentbrain-harness/typert-protocol": "workspace:^",
+    "@agentbrain-harness/typert-registry": "workspace:^"
+  }
+}

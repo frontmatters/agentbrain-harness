@@ -1,0 +1,5 @@
+- dialog "Welcome to agentBrain Harness":
+  - heading "Welcome to agentBrain Harness" [level=2]
+  - paragraph: agentBrain Harness now includes an optional AgentBrain integration for shared skills, context, and memory. ABH remains standalone when AgentBrain is unavailable.
+  - paragraph: This is an experimental release that still changes quickly. Expect rough edges and verify the installation before relying on the integration for daily work.
+  - button "Get started"

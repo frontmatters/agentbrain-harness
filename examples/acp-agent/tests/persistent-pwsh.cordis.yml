@@ -1,0 +1,42 @@
+# Minimal live counterpart for the persistent-pwsh-tool-turn snapshot composition.
+- id: llm-deepseek
+  name: '@agentbrain-harness/llm-deepseek'
+  config:
+    models:
+      - id: deepseek-v4-pro
+
+- id: sandbox-policy
+  name: '@agentbrain-harness/sandbox-policy'
+  config:
+    mode: danger-full-access
+    workspaceRoot: !!js process.cwd()
+
+- id: subprocess
+  name: '@agentbrain-harness/subprocess-local'
+
+- id: terminal
+  name: '@agentbrain-harness/terminal'
+
+- id: terminal-pwsh
+  name: '@agentbrain-harness/terminal-bash'
+  config:
+    shellDialect: pwsh
+    timeoutMs: 30000
+
+- id: acp-agent
+  name: '@agentbrain-harness/acp-demo'
+  config:
+    provider: deepseek-official
+    model: deepseek-v4-pro
+    persistenceRoot: !!js process.env.ABH_SNAPSHOT_SESSIONS_ROOT ?? './.sessions'
+    persistenceCompression: !!js "process.env.ABH_SNAPSHOT === undefined ? 'zstd' : 'none'"
+    workspaceContext: false
+    skills:
+      enabled: false
+    toolBash: false
+    toolJobs: false
+    goals: false
+    persona: You are a concise snapshot agent working in {{cwd}}.
+
+- id: tool-pwsh-persistent
+  name: '@agentbrain-harness/tool-pwsh-persistent'

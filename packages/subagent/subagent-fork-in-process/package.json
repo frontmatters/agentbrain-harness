@@ -1,0 +1,58 @@
+{
+  "name": "@agentbrain-harness/subagent-fork-in-process",
+  "description": "In-process fork subagent backend: runs a child agent seeded with a prefix of the parent's log",
+  "version": "0.1.0-rc.8",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frontmatters/agentbrain-harness.git",
+    "directory": "packages/subagent/subagent-fork-in-process"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./invariant": {
+      "types": "./lib/types/invariant.d.ts",
+      "default": "./lib/invariant.js"
+    },
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/invariant.js",
+    "lib/types/**/*.d.ts"
+  ],
+  "license": "MIT",
+  "peerDependencies": {
+    "@agentbrain-harness/agent": "workspace:^",
+    "@agentbrain-harness/invariants": "workspace:^",
+    "@agentbrain-harness/session": "workspace:^",
+    "@agentbrain-harness/subagent": "workspace:^",
+    "@agentbrain-harness/subagent-in-process-driver": "workspace:^",
+    "@agentbrain-harness/cordis": "workspace:^"
+  },
+  "dependencies": {
+    "@agentbrain-harness/schemastery": "workspace:^"
+  },
+  "devDependencies": {
+    "@agentbrain-harness/cordis-plugin-loader": "workspace:^",
+    "@agentbrain-harness/agent": "workspace:^",
+    "@agentbrain-harness/agent-loop": "workspace:^",
+    "@agentbrain-harness/agent-loop-testkit": "workspace:^",
+    "@agentbrain-harness/invariants": "workspace:^",
+    "@agentbrain-harness/llm": "workspace:^",
+    "@agentbrain-harness/session": "workspace:^",
+    "@agentbrain-harness/subagent": "workspace:^",
+    "@agentbrain-harness/subagent-in-process-driver": "workspace:^",
+    "@agentbrain-harness/subagent-spawn-in-process": "workspace:^",
+    "@agentbrain-harness/cordis": "workspace:^"
+  }
+}

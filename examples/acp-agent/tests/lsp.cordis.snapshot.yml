@@ -1,0 +1,29 @@
+# Keyless replay keeps the LSP composition intact and replaces only the model adapter.
+- id: base
+  name: '@agentbrain-harness/cordis-plugin-include'
+  config:
+    path: ../cordis.yml
+    patches:
+      - id: llm-deepseek
+        name: '@agentbrain-harness/llm-deepseek'
+        disabled: true
+      - insert:
+          - id: lsp
+            name: '@agentbrain-harness/lsp'
+          - id: lsp-stdio
+            name: '@agentbrain-harness/lsp-stdio'
+            config:
+              servers:
+                fixture:
+                  command: !!js process.execPath
+                  args: ['./lsp-server.mjs']
+                  extensionToLanguage:
+                    '.ts': typescript
+          - id: timeout-policy
+            name: '@agentbrain-harness/tool-call-timeout-policy'
+          - id: tool-lsp
+            name: '@agentbrain-harness/tool-lsp'
+            config:
+              maxLocations: 1
+          - id: llm-replay
+            name: '@agentbrain-harness/llm-replay'

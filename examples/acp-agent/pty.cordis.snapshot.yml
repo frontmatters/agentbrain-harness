@@ -1,0 +1,27 @@
+# Keyless replay counterpart to pty.cordis.yml.
+- id: base
+  name: '@agentbrain-harness/cordis-plugin-include'
+  config:
+    path: ./cordis.yml
+    patches:
+      - id: llm-deepseek
+        name: '@agentbrain-harness/llm-deepseek'
+        disabled: true
+      - insert:
+          - id: pty
+            name: '@agentbrain-harness/terminal'
+          - id: pty-snapshot-backend
+            name: './pty-snapshot-backend.mjs'
+          - id: tool-terminal
+            name: '@agentbrain-harness/tool-terminal'
+            config:
+              maxResultBytes: 64
+          - id: llm-replay
+            name: '@agentbrain-harness/llm-replay'
+            config:
+              providers:
+                - id: deepseek-official
+                  name: DeepSeek
+                  models:
+                    - id: deepseek-v4-flash
+                    - id: deepseek-v4-pro

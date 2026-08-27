@@ -1,0 +1,8 @@
+/* The default-model control sits above the provider rows as a compact,
+   thin-bordered card so the agent default reads as page-level, not per-row. */
+
+.control {
+  padding: 12px 14px;
+  border: 1px solid var(--ab-web-alias-border-l2);
+  border-radius: 12px;
+}

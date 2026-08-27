@@ -1,0 +1,81 @@
+/** `subagent` namespace dictionaries. */
+
+/** Dictionary namespace owned by this plugin. */
+export const NS = 'subagent'
+
+/** Dutch dictionary (the key-set source of truth). */
+export const nl = {
+  'diagnostic.corrupt': 'sessierecord beschadigd',
+  'diagnostic.unsupported': 'niet-ondersteunde subagent-recordversie',
+  'diagnostic.unavailable': 'sessierecord tijdelijk niet beschikbaar',
+  'duration.seconds': '{seconds}s',
+  'duration.minutes': '{minutes}m {seconds}s',
+  'duration.hours': '{hours}u {minutes}m {seconds}s',
+  'duration.days': '{days}d',
+  'duration.daysHours': '{days}d {hours}u',
+  'duration.months': '~{months}mnd',
+  'duration.monthsDays': '~{months}mnd {days}d',
+  'duration.years': '~{years}j',
+  'duration.yearsMonths': '~{years}j {months}mnd',
+  'duration.exactDays': '{days}d {hours}u {minutes}m {seconds}s',
+  'duration.exactTitle': 'Totale actieve duur: {duration}',
+  'loading.label': 'Subagents laden…',
+  'loading.aria': 'Subagents laden',
+  'load.error': 'Kan subagents niet laden',
+  'retry': 'Opnieuw proberen',
+  'mode.oneShot': 'eenmalig',
+  'mode.continuable': 'voortzetsbaar',
+  'activity.running': 'actief',
+  'activity.inactive': 'niet actief',
+  'branch.collapse': '{label}-subagents inklappen',
+  'branch.expand': '{label}-subagents uitklappen',
+  'count.total.one': '{count} subagent',
+  'count.total.other': '{count} subagents',
+  'count.running.one': '{count} subagent actief',
+  'count.running.other': '{count} subagents actief',
+  'tree.aria': 'Subagent-sessies',
+  'readonly.oneShot.title': 'Eenmalig subagent-record',
+  'readonly.title': 'Deze subagent is voorlopig alleen-lezen',
+  'readonly.oneShot.body': 'Eenmalige tasks accepteren geen vervolgreacties; bekijk hier het volledige uitvoeringsrecord.',
+  'readonly.body': 'De bovenliggende sessie is offline; open deze opnieuw om berichten te blijven sturen.',
+} as const
+
+/** English dictionary, key-identical to the Dutch source of truth. */
+export const en: Record<SubagentKey, string> = {
+  'diagnostic.corrupt': 'corrupted session record',
+  'diagnostic.unsupported': 'unsupported subagent record version',
+  'diagnostic.unavailable': 'session record temporarily unavailable',
+  'duration.seconds': '{seconds}s',
+  'duration.minutes': '{minutes}m {seconds}s',
+  'duration.hours': '{hours}h {minutes}m {seconds}s',
+  'duration.days': '{days}d',
+  'duration.daysHours': '{days}d {hours}h',
+  'duration.months': '~{months}mo',
+  'duration.monthsDays': '~{months}mo {days}d',
+  'duration.years': '~{years}y',
+  'duration.yearsMonths': '~{years}y {months}mo',
+  'duration.exactDays': '{days}d {hours}h {minutes}m {seconds}s',
+  'duration.exactTitle': 'Total active duration: {duration}',
+  'loading.label': 'Loading subagents…',
+  'loading.aria': 'Loading subagents',
+  'load.error': 'Unable to load subagents',
+  'retry': 'Retry',
+  'mode.oneShot': 'one-shot',
+  'mode.continuable': 'continuable',
+  'activity.running': 'running',
+  'activity.inactive': 'not running',
+  'branch.collapse': 'Collapse {label} descendants',
+  'branch.expand': 'Expand {label} descendants',
+  'count.total.one': '{count} subagent',
+  'count.total.other': '{count} subagents',
+  'count.running.one': '{count} subagent running',
+  'count.running.other': '{count} subagents running',
+  'tree.aria': 'Subagent sessions',
+  'readonly.oneShot.title': 'One-shot subagent record',
+  'readonly.title': 'This subagent is read-only for now',
+  'readonly.oneShot.body': 'One-shot tasks do not accept follow-ups; review the full execution record here.',
+  'readonly.body': 'The parent session is offline; reopen it to continue sending messages.',
+}
+
+/** Key domain of the `subagent` namespace (nl is the source of truth). */
+export type SubagentKey = keyof typeof nl

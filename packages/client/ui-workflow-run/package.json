@@ -1,0 +1,78 @@
+{
+  "name": "@agentbrain-harness/client-ui-workflow-run",
+  "description": "Durable workflow-run Conversation Node and nested member disclosure for abh web",
+  "version": "0.1.0-rc.8",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frontmatters/agentbrain-harness.git",
+    "directory": "packages/client/ui-workflow-run"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./invariant": {
+      "types": "./lib/types/invariant.d.ts",
+      "default": "./lib/invariant.js"
+    },
+    "./client": {
+      "types": "./lib/types/client/index.d.ts",
+      "default": "./lib/client.js"
+    },
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
+  },
+  "abh": {
+    "client": {
+      "inject": [
+        "@agentbrain-harness/client-locale",
+        "@agentbrain-harness/client-runtime",
+        "@agentbrain-harness/client-ui-conversation"
+      ],
+      "platform": "web"
+    }
+  },
+  "scripts": {
+    "bundle": "tsdown",
+    "watch": "tsdown --watch"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/invariant.js",
+    "lib/client.js",
+    "lib/types/**/*.d.ts"
+  ],
+  "license": "MIT",
+  "peerDependencies": {
+    "@agentbrain-harness/client-locale": "workspace:^",
+    "@agentbrain-harness/client-runtime": "workspace:^",
+    "@agentbrain-harness/client-ui-conversation": "workspace:^",
+    "@agentbrain-harness/invariants": "workspace:^",
+    "@agentbrain-harness/session": "workspace:^",
+    "@agentbrain-harness/tool-workflow": "workspace:^",
+    "@agentbrain-harness/workflow": "workspace:^",
+    "@agentbrain-harness/cordis": "workspace:^"
+  },
+  "devDependencies": {
+    "@agentbrain-harness/client-locale": "workspace:^",
+    "@agentbrain-harness/client-runtime": "workspace:^",
+    "@agentbrain-harness/client-test-runtime": "workspace:^",
+    "@agentbrain-harness/client-ui-conversation": "workspace:^",
+    "@agentbrain-harness/client-ui-primitives": "workspace:^",
+    "@agentbrain-harness/client-ui-slots": "workspace:^",
+    "@agentbrain-harness/invariants": "workspace:^",
+    "@agentbrain-harness/session": "workspace:^",
+    "@agentbrain-harness/tool-workflow": "workspace:^",
+    "@agentbrain-harness/workflow": "workspace:^",
+    "@types/react": "~18.3.1",
+    "@agentbrain-harness/cordis": "workspace:^",
+    "react": "^18.2.0"
+  }
+}

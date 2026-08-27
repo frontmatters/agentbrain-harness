@@ -1,0 +1,85 @@
+/* Reusable model chooser: one labelled select with loading, empty, and error
+   states. Flat, thin-bordered, and token-driven so it themes with the shell. */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ab-web-alias-label-secondary);
+}
+
+.control {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* The shared chevron variant: appearance:none drops the OS arrow, and the
+   12px caption-gray chevron matches every other dropdown in the package
+   (its rule is asserted by styles.client.spec.ts). */
+.selectInput {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 32px 8px 10px;
+  font-size: 13px;
+  color: var(--ab-web-alias-label-primary);
+  background-color: var(--ab-web-alias-bg-layer-1);
+  border: 1px solid var(--ab-web-alias-border-l2);
+  border-radius: 6px;
+  cursor: pointer;
+  appearance: none;
+  /* Data-URI SVGs cannot resolve CSS variables; #81858C is the caption gray
+     shared by both themes. */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M3 4.5L6 7.5L9 4.5' stroke='%2381858C' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px 12px;
+}
+
+.selectInput:focus-visible {
+  outline: none;
+  border-color: var(--ab-web-alias-brand-primary);
+}
+
+.selectInput:disabled {
+  cursor: default;
+  color: var(--ab-web-alias-label-dimmed);
+  background-color: var(--ab-web-alias-bg-module-platform);
+}
+
+/* Small indeterminate spinner shown while the model list resolves. */
+.busy {
+  position: absolute;
+  right: 10px;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--ab-web-alias-border-l3);
+  border-top-color: var(--ab-web-alias-brand-primary);
+  border-radius: 50%;
+  animation: model-picker-spin 0.7s linear infinite;
+}
+
+.hint {
+  margin: 0;
+  font-size: 12px;
+  color: var(--ab-web-alias-label-tertiary);
+}
+
+.error {
+  margin: 0;
+  font-size: 12px;
+  color: var(--ab-web-alias-state-error-primary);
+}
+
+@keyframes model-picker-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .busy { animation: none; }
+}

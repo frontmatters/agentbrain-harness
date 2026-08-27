@@ -1,0 +1,87 @@
+- dialog "Settings":
+  - navigation:
+    - text: Settings
+    - button "General":
+      - img
+      - text: General
+    - button "Models":
+      - img
+      - text: Models
+    - button "Plugins":
+      - img
+      - text: Plugins
+    - button "Agent presets":
+      - img
+      - text: Agent presets
+  - button "Open configuration file"
+  - button "Close":
+    - img
+    - text: Close
+  - heading "Models" [level=2]
+  - paragraph: Enter your API keys to use models from the following providers.
+  - text: Default model · Custom (OpenAI-compatible)
+  - combobox "Default model · Custom (OpenAI-compatible)":
+    - option "gpt-5" [selected]
+  - paragraph: API key providers
+  - list:
+    - listitem:
+      - text: Custom (OpenAI-compatible) Custom
+      - img "API key configured"
+      - button "Edit Custom (OpenAI-compatible) (default)": Edit
+      - text: Custom (OpenAI-compatible) default API key
+      - textbox "API key":
+        - /placeholder: Configured — enter a new value to replace
+      - group:
+        - text: Customized settings Display name
+        - textbox "Display name":
+          - /placeholder: Custom (OpenAI-compatible)
+        - text: Base URL
+        - textbox "Base URL":
+          - /placeholder: https://api.openai.com/v1
+        - text: API protocol
+        - combobox "API protocol":
+          - option "openai-completions" [selected]
+          - option "openai-responses"
+          - option "anthropic-messages"
+        - region "Models":
+          - text: Models Customized model catalog
+          - button "Restore defaults"
+          - button "Fetch available models"
+          - textbox "Model ID 1":
+            - /placeholder: Model ID
+            - text: private-preview
+          - textbox "Display name 1":
+            - /placeholder: Display name
+            - text: Private Preview
+          - button "Capacities 1" [expanded]
+          - button "Delete model 1"
+          - text: Context window
+          - textbox "Context window 1":
+            - /placeholder: 256K
+            - text: "131072"
+          - text: Max output tokens
+          - textbox "Max output tokens 1":
+            - /placeholder: 32K
+            - text: 64K
+          - button "Add model"
+      - button "Cancel"
+      - button "Apply"
+  - paragraph: Account sign-in
+  - text: ChatGPT
+  - button "Connect ChatGPT"
+  - text: Claude
+  - button "Connect Claude"
+  - text: Grok
+  - button "Connect Grok"
+  - text: GitHub Copilot
+  - button "Connect GitHub Copilot"
+  - text: Kimi For Coding
+  - button "Connect Kimi For Coding"
+  - text: OpenRouter
+  - button "Connect OpenRouter"
+  - button "Add provider":
+    - img
+    - text: Add provider
+  - button "Add a custom provider":
+    - img
+    - text: Add a custom provider

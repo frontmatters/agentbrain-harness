@@ -1,0 +1,76 @@
+{
+  "name": "@agentbrain-harness/client-ui-settings",
+  "description": "Settings domain base plugin: the settings-namespace scope service and the canonical settings slot-type contract",
+  "version": "0.1.0-rc.8",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frontmatters/agentbrain-harness.git",
+    "directory": "packages/client/ui-settings"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./invariant": {
+      "types": "./lib/types/invariant.d.ts",
+      "default": "./lib/invariant.js"
+    },
+    "./client": {
+      "types": "./lib/types/client/index.d.ts",
+      "default": "./lib/client.js"
+    },
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
+  },
+  "abh": {
+    "client": {
+      "inject": [
+        "@agentbrain-harness/client-connection",
+        "@agentbrain-harness/client-runtime",
+        "@agentbrain-harness/api-remotes"
+      ],
+      "platform": "web"
+    }
+  },
+  "scripts": {
+    "bundle": "tsdown",
+    "watch": "tsdown --watch"
+  },
+  "license": "MIT",
+  "dependencies": {},
+  "peerDependencies": {
+    "@agentbrain-harness/schemastery": "workspace:^",
+    "@agentbrain-harness/cordis": "workspace:^",
+    "@agentbrain-harness/api-remotes": "workspace:^",
+    "@agentbrain-harness/client-connection": "workspace:^",
+    "@agentbrain-harness/client-runtime": "workspace:^",
+    "@agentbrain-harness/invariants": "workspace:^",
+    "@agentbrain-harness/settings": "workspace:^"
+  },
+  "devDependencies": {
+    "@agentbrain-harness/schemastery": "workspace:^",
+    "@agentbrain-harness/cordis": "workspace:^",
+    "@agentbrain-harness/api-remotes": "workspace:^",
+    "@agentbrain-harness/client-runtime": "workspace:^",
+    "@agentbrain-harness/client-test-runtime": "workspace:^",
+    "@agentbrain-harness/client-ui-slots": "workspace:^",
+    "@agentbrain-harness/invariants": "workspace:^",
+    "@agentbrain-harness/settings": "workspace:^",
+    "@types/react": "~18.3.1",
+    "react": "^18.2.0",
+    "@agentbrain-harness/client-connection": "workspace:^"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/invariant.js",
+    "lib/client.js",
+    "lib/types/**/*.d.ts"
+  ]
+}

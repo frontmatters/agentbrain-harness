@@ -1,0 +1,49 @@
+- dialog "Settings":
+  - navigation:
+    - text: Settings
+    - button "General":
+      - img
+      - text: General
+    - button "Models":
+      - img
+      - text: Models
+    - button "Plugins":
+      - img
+      - text: Plugins
+    - button "Agent presets":
+      - img
+      - text: Agent presets
+  - button "Open configuration file"
+  - button "Close":
+    - img
+    - text: Close
+  - heading "Models" [level=2]
+  - paragraph: Enter your API keys to use models from the following providers.
+  - text: Default model · Custom (OpenAI-compatible)
+  - combobox "Default model · Custom (OpenAI-compatible)":
+    - option "gpt-5" [selected]
+  - paragraph: API key providers
+  - list:
+    - listitem:
+      - text: Custom (OpenAI-compatible) Custom
+      - img "API key missing"
+      - button "Edit Custom (OpenAI-compatible) (default)": Edit
+  - paragraph: Account sign-in
+  - text: ChatGPT
+  - button "Connect ChatGPT"
+  - text: Claude
+  - button "Connect Claude"
+  - text: Grok
+  - button "Connect Grok"
+  - text: GitHub Copilot
+  - button "Connect GitHub Copilot"
+  - text: Kimi For Coding
+  - button "Connect Kimi For Coding"
+  - text: OpenRouter
+  - button "Connect OpenRouter"
+  - button "Add provider":
+    - img
+    - text: Add provider
+  - button "Add a custom provider":
+    - img
+    - text: Add a custom provider

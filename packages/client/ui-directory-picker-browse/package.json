@@ -1,0 +1,77 @@
+{
+  "name": "@agentbrain-harness/client-ui-directory-picker-browse",
+  "description": "In-app directory browsing surface: the workspace directory-flow owner rendering the host's listing and creation primitives",
+  "version": "0.1.0-rc.8",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frontmatters/agentbrain-harness.git",
+    "directory": "packages/client/ui-directory-picker-browse"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./invariant": {
+      "types": "./lib/types/invariant.d.ts",
+      "default": "./lib/invariant.js"
+    },
+    "./client": {
+      "types": "./lib/types/client/index.d.ts",
+      "default": "./lib/client.js"
+    },
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
+  },
+  "abh": {
+    "client": {
+      "inject": [
+        "@agentbrain-harness/client-runtime",
+        "@agentbrain-harness/client-ui-workspace",
+        "@agentbrain-harness/client-locale"
+      ],
+      "platform": "web"
+    }
+  },
+  "scripts": {
+    "bundle": "tsdown",
+    "watch": "tsdown --watch"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "clsx": "^2.0.0"
+  },
+  "peerDependencies": {
+    "@agentbrain-harness/client-locale": "workspace:^",
+    "@agentbrain-harness/client-runtime": "workspace:^",
+    "@agentbrain-harness/client-ui-workspace": "workspace:^",
+    "@agentbrain-harness/invariants": "workspace:^",
+    "@agentbrain-harness/cordis": "workspace:^"
+  },
+  "devDependencies": {
+    "@agentbrain-harness/client-locale": "workspace:^",
+    "@agentbrain-harness/client-runtime": "workspace:^",
+    "@agentbrain-harness/client-test-runtime": "workspace:^",
+    "@agentbrain-harness/client-ui-primitives": "workspace:^",
+    "@agentbrain-harness/client-ui-slots": "workspace:^",
+    "@agentbrain-harness/client-ui-workspace": "workspace:^",
+    "@agentbrain-harness/invariants": "workspace:^",
+    "@testing-library/react": "^16.1.0",
+    "@types/react": "~18.3.1",
+    "@agentbrain-harness/cordis": "workspace:^",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/invariant.js",
+    "lib/client.js",
+    "lib/types/**/*.d.ts"
+  ]
+}

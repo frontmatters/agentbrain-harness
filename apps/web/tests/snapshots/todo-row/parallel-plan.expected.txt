@@ -1,0 +1,9 @@
+row=todo_write
+title=Update to-do list
+summary=1/4 completed · Fixture-voorbeeld implementeren
+suffix=+1
+panel=1 completed · 2 in progress · 1 pending
+item=completed Vereisten analyseren
+item=in_progress Fixture-voorbeeld implementeren
+item=in_progress Achtergrond-build uitvoeren
+item=pending Browseracceptatie

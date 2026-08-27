@@ -1,0 +1,54 @@
+- dialog "Settings":
+  - navigation:
+    - text: Settings
+    - button "General":
+      - img
+      - text: General
+    - button "Models":
+      - img
+      - text: Models
+    - button "Plugins":
+      - img
+      - text: Plugins
+    - button "Agent presets":
+      - img
+      - text: Agent presets
+  - button "Open configuration file"
+  - button "Close":
+    - img
+    - text: Close
+  - heading "Models" [level=2]
+  - paragraph: Enter your API keys to use models from the following providers.
+  - text: Default model · Default provider
+  - combobox "Default model · Default provider":
+    - option "gpt-5" [selected]
+  - paragraph: API key providers
+  - list:
+    - listitem:
+      - text: minimax-cn
+      - img "API key configured"
+      - button "Edit minimax-cn": Edit
+      - button "Delete minimax-cn": Delete
+    - listitem:
+      - text: Acme Gateway Custom
+      - button "Edit Acme Gateway (acme-gateway)": Edit
+      - button "Delete Acme Gateway (acme-gateway)": Delete
+  - paragraph: Account sign-in
+  - text: ChatGPT
+  - button "Connect ChatGPT"
+  - text: Claude
+  - button "Connect Claude"
+  - text: Grok
+  - button "Connect Grok"
+  - text: GitHub Copilot
+  - button "Connect GitHub Copilot"
+  - text: Kimi For Coding
+  - button "Connect Kimi For Coding"
+  - text: OpenRouter
+  - button "Connect OpenRouter"
+  - button "Add provider":
+    - img
+    - text: Add provider
+  - button "Add a custom provider":
+    - img
+    - text: Add a custom provider

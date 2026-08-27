@@ -1,0 +1,57 @@
+- banner:
+  - navigation "Session hierarchy":
+    - button "Use the bash tool to" [disabled]
+  - img
+  - text: Standard mode
+  - button "Session log":
+    - text: Session log
+    - img
+  - tablist:
+    - tab "Chat" [selected]
+    - tab "Trajectory"
+- text: "Use the bash tool to run exactly: echo WEB_E2E_OK. Then reply with the single word DONE and stop. {{clock}}"
+- button "Copy":
+  - img
+- button "Context injection @agentbrain-harness/system-prompt":
+  - img
+  - img
+  - text: Context injection @agentbrain-harness/system-prompt
+- button "Context injection skill-catalog":
+  - img
+  - img
+  - text: Context injection skill-catalog
+- button "Context injection agentbrain-context":
+  - img
+  - img
+  - text: Context injection agentbrain-context
+- button "Think The user wants me to run a simple bash command and reply with \"DONE\".":
+  - img
+  - img
+  - text: Think The user wants me to run a simple bash command and reply with "DONE".
+- 'button "Failed Bash Error: sandbox mode \"workspace-write\" is requested but no sandbox backend is usable on this host; refusing to run the command unconfined. Install bubblewrap or run a Landlock-enforcing kernel (Linux), ensure sandbox-exec is usable (macOS), or ensure the ACL restricted-token runner can start (Windows) — otherwise switch the consumer to danger-full-access. Runner failure: sandbox-exec: sandbox_apply: Operation not permitted"':
+  - img
+  - text: "Failed Bash Error: sandbox mode \"workspace-write\" is requested but no sandbox backend is usable on this host; refusing to run the command unconfined. Install bubblewrap or run a Landlock-enforcing kernel (Linux), ensure sandbox-exec is usable (macOS), or ensure the ACL restricted-token runner can start (Windows) — otherwise switch the consumer to danger-full-access. Runner failure: sandbox-exec: sandbox_apply: Operation not permitted"
+- button "Think The command executed successfully and output \"WEB_E2E_OK\". I just need to reply with \"DONE\".":
+  - img
+  - img
+  - text: Think The command executed successfully and output "WEB_E2E_OK". I just need to reply with "DONE".
+- paragraph: DONE
+- button "Copy":
+  - img
+- button "Good response":
+  - img
+- button "Bad response":
+  - img
+- button "Branch into a new conversation":
+  - img
+- text: {{clock}} Ran for {{duration}} TTFT {{duration}} {{throughput}} tok/s
+- textbox "Message the agent"
+- button "Commands":
+  - img
+- 'button "Access mode, current: Workspace Write"': Workspace Write
+- button "Select model, current gpt-5":
+  - text: gpt-5
+  - img
+- button "6% of context used"
+- button "Send message" [disabled]
+- text: 1 turns · 2 steps LLM {{duration}} · Tool call {{duration}} TTFT avg {{duration}} · {{throughput}} tok/s Cache hit 99% Input 15.7K tok · Output 111 tok

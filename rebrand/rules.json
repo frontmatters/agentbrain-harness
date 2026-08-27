@@ -1,0 +1,145 @@
+{
+  "$comment": [
+    "Declarative rebrand of an upstream deepseek-harness snapshot into agentbrain-harness.",
+    "Rules apply in order; each is a plain regex over file text. Order matters: the",
+    "longest, most specific names must match before the bare ones, or a later rule",
+    "rewrites half of an already-rewritten name.",
+    "",
+    "The provider is not the brand. deepseek-harness is the harness (rebrand it);",
+    "DeepSeek is the model vendor whose API this talks to (leave it alone). Anything",
+    "naming credentials, endpoints, adapters, or model ids stays untouched."
+  ],
+
+  "keep": {
+    "$comment": "Never rewritten. Matched before any rule runs and restored afterwards.",
+    "patterns": [
+      "DEEPSEEK_API_KEY",
+      "DEEPSEEK_BASE_URL",
+      "api\\.deepseek\\.com",
+      "platform\\.deepseek\\.com",
+      "deepseek-chat",
+      "deepseek-reasoner",
+      "[^\\s()\\[\\]\"'`,]*archived/[^\\s()\\[\\]\"'`,]*"
+    ]
+  },
+
+  "rules": [
+    {
+      "name": "scoped package names",
+      "$comment": "@deepseek-ai/dsh-session -> @agentbrain-harness/session (scope changes, dsh- prefix drops).",
+      "find": "@deepseek-ai/dsh-",
+      "replace": "@agentbrain-harness/"
+    },
+    {
+      "name": "scoped package names (regex-escaped)",
+      "$comment": "Source regexes write @deepseek-ai\\/dsh- . Missing this form silently blinds the scanners in scripts/cordis-walk.ts and scripts/slot-walk.ts.",
+      "find": "@deepseek-ai\\\\/dsh-",
+      "replace": "@agentbrain-harness\\\\/"
+    },
+    {
+      "name": "remaining scope",
+      "find": "@deepseek-ai/",
+      "replace": "@agentbrain-harness/"
+    },
+    {
+      "name": "remaining scope (regex-escaped)",
+      "find": "@deepseek-ai\\\\/",
+      "replace": "@agentbrain-harness\\\\/"
+    },
+    {
+      "name": "repository slug",
+      "find": "deepseek-harness",
+      "replace": "agentbrain-harness"
+    },
+    {
+      "name": "python module slug",
+      "find": "deepseek_harness",
+      "replace": "agentbrain_harness"
+    },
+    {
+      "name": "product name",
+      "$comment": "Only with 'Harness' attached. Bare 'DeepSeek' names the model vendor and must survive.",
+      "find": "DeepSeek Harness",
+      "replace": "agentBrain Harness"
+    },
+    {
+      "name": "module prefix",
+      "$comment": "Cordis module names such as dsh-session in cordis.yml, plus dsh- prefixed files.",
+      "find": "(?<![A-Za-z0-9_])dsh-",
+      "replace": "abh-"
+    },
+    {
+      "name": "environment prefix",
+      "find": "DSH_",
+      "replace": "ABH_"
+    },
+    {
+      "name": "bare command, home dir and manifest key",
+      "$comment": "Matches dsh, .dsh and dsh.profile; the lookbehind is what protects the word handshake.",
+      "find": "(?<![A-Za-z0-9_-])dsh(?![A-Za-z0-9_-])",
+      "replace": "abh"
+    },
+    {
+      "name": "bare uppercase",
+      "find": "(?<![A-Za-z0-9_])DSH(?![A-Za-z0-9_])",
+      "replace": "ABH"
+    },
+    {
+      "name": "camelCase identifiers",
+      "$comment": "dshHome, dshEnv, @dshScopeScan.",
+      "find": "(?<![A-Za-z0-9_])dsh(?=[A-Z])",
+      "replace": "abh"
+    },
+    {
+      "name": "PascalCase identifiers",
+      "$comment": "DshEnvironment, DshEnvironmentKey.",
+      "find": "(?<![A-Za-z0-9_])Dsh(?=[A-Z])",
+      "replace": "Abh"
+    }
+  ],
+
+  "path_renames": [
+    {
+      "$comment": "Applied to file and directory names, deepest first.",
+      "find": "(?<![A-Za-z0-9_])dsh([-_.])",
+      "replace": "abh\\1"
+    }
+  ],
+
+  "skip_dirs": ["node_modules", ".git", ".dist", ".generated", ".cache", "lib"],
+
+  "skip_paths": [
+    {
+      "path": ".agents/notes/archived",
+      "$comment": "Frozen by repository policy: sealed history, never edited. Links pointing into it are protected by the archived/ keep pattern."
+    },
+    {
+      "path": "rebrand",
+      "$comment": "The tool must not rewrite itself. These rules quote the upstream names they search for, so sweeping this directory turns every pattern into its own replacement and the next run matches nothing it should."
+    },
+    {
+      "path": "docs/fork",
+      "$comment": "Documents the rename mapping, so it quotes upstream names on purpose. Sweeping it rewrites the left column of every table into the right one and destroys the record."
+    },
+    {
+      "path": ".claude",
+      "$comment": "Local agent settings, not repository content."
+    }
+  ],
+
+  "binary_suffixes": [
+    ".png", ".jpg", ".jpeg", ".gif", ".ico", ".woff", ".woff2", ".ttf",
+    ".otf", ".zip", ".gz", ".tgz", ".pdf", ".node", ".wasm", ".dylib", ".so"
+  ],
+
+  "manual_steps": {
+    "$comment": "State the sweep cannot reach. Run these by hand after applying; details in README.md.",
+    "steps": [
+      "git config core.hooksPath  ->  .git/abh-hooks (and rename the directory)",
+      "rename .git/abh-hooks/.dsh-lefthook-owned  ->  .abh-lefthook-owned",
+      "git config merge driver name dsh-translation-pairing -> abh-translation-pairing (matches .gitattributes)",
+      "pnpm install, then pnpm run build && pnpm run typecheck",
+      "regenerate catalogs: gen-cordis-catalog, gen-client-catalog, gen-tool-catalog, gen-config-catalog, gen-persistence-catalog, gen-scoped-events, gen-cordis-inspect-catalog"
+    ]
+  }
+}

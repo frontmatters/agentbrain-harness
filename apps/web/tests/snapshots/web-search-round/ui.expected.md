@@ -1,0 +1,50 @@
+- banner:
+  - navigation "Session hierarchy":
+    - button "Use web_search once with queries" [disabled]
+  - img
+  - text: Standard mode
+  - button "Session log":
+    - text: Session log
+    - img
+  - tablist:
+    - tab "Chat" [selected]
+    - tab "Trajectory"
+- text: Use web_search once with queries ["agentBrain Harness snapshot search","agentBrain Harness multi-query search"]. Then reply exactly SEARCH_DONE and stop. {{clock}}
+- button "Copy":
+  - img
+- button "Context injection @agentbrain-harness/system-prompt":
+  - img
+  - img
+  - text: Context injection @agentbrain-harness/system-prompt
+- button "Context injection skill-catalog":
+  - img
+  - img
+  - text: Context injection skill-catalog
+- button "Context injection agentbrain-context":
+  - img
+  - img
+  - text: Context injection agentbrain-context
+- button "Search agentBrain Harness snapshot search, agentBrain Harness multi-query search":
+  - img
+  - img
+  - text: Search agentBrain Harness snapshot search, agentBrain Harness multi-query search
+- paragraph: SEARCH_DONE
+- button "Copy":
+  - img
+- button "Good response":
+  - img
+- button "Bad response":
+  - img
+- button "Branch into a new conversation":
+  - img
+- text: {{clock}} Ran for {{duration}} TTFT {{duration}} {{throughput}} tok/s
+- textbox "Message the agent"
+- button "Commands":
+  - img
+- 'button "Access mode, current: Workspace Write"': Workspace Write
+- button "Select model, current gpt-5":
+  - text: gpt-5
+  - img
+- button "0% of context used"
+- button "Send message" [disabled]
+- text: 1 turns · 2 steps LLM {{duration}} · Tool call {{duration}} TTFT avg {{duration}} · {{throughput}} tok/s Cache hit 0% Input 22 tok · Output 7 tok

@@ -1,0 +1,89 @@
+{
+  "name": "@agentbrain-harness/client-ui-theme",
+  "description": "Theme plugin: Host bootstrap for the pre-plugin palette; DOM-free ThemeRuntime for light/dark/system state; --ab-web-* token styles and Appearance settings row",
+  "version": "0.1.0-rc.8",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frontmatters/agentbrain-harness.git",
+    "directory": "packages/client/ui-theme"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./invariant": {
+      "types": "./lib/types/invariant.d.ts",
+      "default": "./lib/invariant.js"
+    },
+    "./client": {
+      "types": "./lib/types/client/index.d.ts",
+      "default": "./lib/client.js"
+    },
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
+  },
+  "abh": {
+    "client": {
+      "inject": [
+        "@agentbrain-harness/client-connection",
+        "@agentbrain-harness/client-runtime",
+        "@agentbrain-harness/client-locale",
+        "@agentbrain-harness/client-ui-settings",
+        "@agentbrain-harness/api-remotes"
+      ],
+      "platform": "web",
+      "immediately": true
+    }
+  },
+  "license": "MIT",
+  "peerDependencies": {
+    "@agentbrain-harness/schemastery": "workspace:^",
+    "@agentbrain-harness/cordis": "workspace:^",
+    "@agentbrain-harness/api-remotes": "workspace:^",
+    "@agentbrain-harness/client-connection": "workspace:^",
+    "@agentbrain-harness/client-locale": "workspace:^",
+    "@agentbrain-harness/client-runtime": "workspace:^",
+    "@agentbrain-harness/client-ui-settings": "workspace:^",
+    "@agentbrain-harness/host-webserver": "workspace:^",
+    "@agentbrain-harness/invariants": "workspace:^",
+    "@agentbrain-harness/settings": "workspace:^"
+  },
+  "devDependencies": {
+    "@agentbrain-harness/schemastery": "workspace:^",
+    "@agentbrain-harness/cordis": "workspace:^",
+    "@agentbrain-harness/api-remotes": "workspace:^",
+    "@agentbrain-harness/client-locale": "workspace:^",
+    "@agentbrain-harness/client-runtime": "workspace:^",
+    "@agentbrain-harness/client-test-runtime": "workspace:^",
+    "@agentbrain-harness/client-ui-primitives": "workspace:^",
+    "@agentbrain-harness/client-ui-settings": "workspace:^",
+    "@agentbrain-harness/client-ui-slots": "workspace:^",
+    "@agentbrain-harness/host-webserver": "workspace:^",
+    "@agentbrain-harness/invariants": "workspace:^",
+    "@types/react": "~18.3.1",
+    "react": "^18.2.0",
+    "@agentbrain-harness/settings": "workspace:^",
+    "@agentbrain-harness/client-connection": "workspace:^"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/invariant.js",
+    "lib/client.js",
+    "lib/styles",
+    "lib/types/**/*.d.ts"
+  ],
+  "scripts": {
+    "bundle": "tsdown",
+    "watch": "tsdown --watch"
+  },
+  "dependencies": {
+    "clsx": "^2.0.0"
+  }
+}

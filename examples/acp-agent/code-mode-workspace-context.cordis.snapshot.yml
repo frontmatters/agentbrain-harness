@@ -1,0 +1,30 @@
+# Keyless replay counterpart of code-mode-workspace-context.cordis.yml. It adds
+# Code Mode to the default filesystem suite and swaps in replay.
+- id: base
+  name: '@agentbrain-harness/cordis-plugin-include'
+  config:
+    path: ./cordis.yml
+    patches:
+      - id: llm-deepseek
+        name: '@agentbrain-harness/llm-deepseek'
+        disabled: true
+      - id: acp-agent
+        name: '@agentbrain-harness/acp-demo'
+        config:
+          provider: deepseek-official
+          model: deepseek-v4-flash
+          persistenceRoot: !!js process.env.ABH_SNAPSHOT_SESSIONS_ROOT ?? './.sessions'
+          persistenceCompression: 'none'
+          workspaceContext:
+            maxBytes: 65536
+          tools:
+            mode: code
+          persona: |
+            You are a coding assistant powered by the {{model}} model. Your working directory is {{cwd}}.
+
+            Verify your work by running the code or tests. Keep answers brief and factual.
+      - insert:
+          - id: code-runtime
+            name: '@agentbrain-harness/code-runtime-worker-thread'
+          - id: llm-replay
+            name: '@agentbrain-harness/llm-replay'

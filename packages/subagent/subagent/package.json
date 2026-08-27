@@ -1,0 +1,106 @@
+{
+  "name": "@agentbrain-harness/subagent",
+  "description": "Abstract subagent seam (ctx.subagents): named-provider registry for delegating to child agents",
+  "version": "0.1.0-rc.8",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frontmatters/agentbrain-harness.git",
+    "directory": "packages/subagent/subagent"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./invariant": {
+      "types": "./lib/types/invariant.d.ts",
+      "default": "./lib/invariant.js"
+    },
+    "./client": {
+      "types": "./lib/types/client.d.ts",
+      "default": "./lib/types/client.js"
+    },
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/invariant.js",
+    "lib/types/**/*.js",
+    "lib/types/**/*.d.ts"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "zod": "^4.4.3"
+  },
+  "peerDependencies": {
+    "@agentbrain-harness/agent": "workspace:^",
+    "@agentbrain-harness/agent-presets": "workspace:^",
+    "@agentbrain-harness/brand": "workspace:^",
+    "@agentbrain-harness/invariants": "workspace:^",
+    "@agentbrain-harness/llm": "workspace:^",
+    "@agentbrain-harness/sandbox": "workspace:^",
+    "@agentbrain-harness/sandbox-policy": "workspace:^",
+    "@agentbrain-harness/scope": "workspace:^",
+    "@agentbrain-harness/session": "workspace:^",
+    "@agentbrain-harness/session-persistence": "workspace:^",
+    "@agentbrain-harness/session-projection": "workspace:^",
+    "@agentbrain-harness/session-projection-cache": "workspace:^",
+    "@agentbrain-harness/jobs": "workspace:^",
+    "@agentbrain-harness/tools": "workspace:^",
+    "@agentbrain-harness/user-approval": "workspace:^",
+    "@agentbrain-harness/cordis": "workspace:^"
+  },
+  "peerDependenciesMeta": {
+    "@agentbrain-harness/agent-presets": {
+      "optional": true
+    },
+    "@agentbrain-harness/sandbox": {
+      "optional": true
+    },
+    "@agentbrain-harness/sandbox-policy": {
+      "optional": true
+    },
+    "@agentbrain-harness/session-persistence": {
+      "optional": true
+    },
+    "@agentbrain-harness/session-projection": {
+      "optional": true
+    },
+    "@agentbrain-harness/session-projection-cache": {
+      "optional": true
+    },
+    "@agentbrain-harness/jobs": {
+      "optional": true
+    },
+    "@agentbrain-harness/user-approval": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@agentbrain-harness/agent": "workspace:^",
+    "@agentbrain-harness/agent-presets": "workspace:^",
+    "@agentbrain-harness/brand": "workspace:^",
+    "@agentbrain-harness/invariants": "workspace:^",
+    "@agentbrain-harness/llm": "workspace:^",
+    "@agentbrain-harness/sandbox": "workspace:^",
+    "@agentbrain-harness/sandbox-policy": "workspace:^",
+    "@agentbrain-harness/scope": "workspace:^",
+    "@agentbrain-harness/session": "workspace:^",
+    "@agentbrain-harness/session-persistence": "workspace:^",
+    "@agentbrain-harness/session-projection": "workspace:^",
+    "@agentbrain-harness/session-projection-cache": "workspace:^",
+    "@agentbrain-harness/storage": "workspace:^",
+    "@agentbrain-harness/storage-domain": "workspace:^",
+    "@agentbrain-harness/jobs": "workspace:^",
+    "@agentbrain-harness/tools": "workspace:^",
+    "@agentbrain-harness/user-approval": "workspace:^",
+    "@agentbrain-harness/cordis": "workspace:^"
+  }
+}

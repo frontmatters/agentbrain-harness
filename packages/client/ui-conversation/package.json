@@ -1,0 +1,117 @@
+{
+  "name": "@agentbrain-harness/client-ui-conversation",
+  "description": "Conversation domain: skeleton, ordered chat flow, composer with the Host-backed busy-Enter preference, and details host",
+  "version": "0.1.0-rc.8",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frontmatters/agentbrain-harness.git",
+    "directory": "packages/client/ui-conversation"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./invariant": {
+      "types": "./lib/types/invariant.d.ts",
+      "default": "./lib/invariant.js"
+    },
+    "./client": {
+      "types": "./lib/types/client/index.d.ts",
+      "default": "./lib/client.js"
+    },
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
+  },
+  "abh": {
+    "client": {
+      "inject": [
+        "@agentbrain-harness/client-connection",
+        "@agentbrain-harness/client-locale",
+        "@agentbrain-harness/client-runtime",
+        "@agentbrain-harness/client-ui-settings",
+        "@agentbrain-harness/api-remotes",
+        "@agentbrain-harness/client-ui-layout"
+      ],
+      "platform": "web"
+    }
+  },
+  "scripts": {
+    "bundle": "tsdown",
+    "watch": "tsdown --watch"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "clsx": "^2.0.0"
+  },
+  "peerDependencies": {
+    "@agentbrain-harness/schemastery": "workspace:^",
+    "@agentbrain-harness/cordis": "workspace:^",
+    "@agentbrain-harness/agent": "workspace:^",
+    "@agentbrain-harness/api-remotes": "workspace:^",
+    "@agentbrain-harness/attachment": "workspace:^",
+    "@agentbrain-harness/brand": "workspace:^",
+    "@agentbrain-harness/client-connection": "workspace:^",
+    "@agentbrain-harness/client-locale": "workspace:^",
+    "@agentbrain-harness/client-runtime": "workspace:^",
+    "@agentbrain-harness/client-ui-settings": "workspace:^",
+    "@agentbrain-harness/client-ui-input-trigger": "workspace:^",
+    "@agentbrain-harness/commands": "workspace:^",
+    "@agentbrain-harness/compaction": "workspace:^",
+    "@agentbrain-harness/invariants": "workspace:^",
+    "@agentbrain-harness/llm-retry": "workspace:^",
+    "@agentbrain-harness/session-stats": "workspace:^",
+    "@agentbrain-harness/token-meter": "workspace:^",
+    "@agentbrain-harness/tools": "workspace:^",
+    "@agentbrain-harness/settings": "workspace:^",
+    "@agentbrain-harness/client-ui-layout": "workspace:^",
+    "@agentbrain-harness/goal": "workspace:^",
+    "@agentbrain-harness/permission-presets": "workspace:^",
+    "@agentbrain-harness/plan-mode": "workspace:^",
+    "@agentbrain-harness/tool-todo": "workspace:^"
+  },
+  "devDependencies": {
+    "@agentbrain-harness/schemastery": "workspace:^",
+    "@agentbrain-harness/cordis": "workspace:^",
+    "@agentbrain-harness/agent": "workspace:^",
+    "@agentbrain-harness/api-remotes": "workspace:^",
+    "@agentbrain-harness/attachment": "workspace:^",
+    "@agentbrain-harness/brand": "workspace:^",
+    "@agentbrain-harness/client-connection": "workspace:^",
+    "@agentbrain-harness/client-locale": "workspace:^",
+    "@agentbrain-harness/client-runtime": "workspace:^",
+    "@agentbrain-harness/client-test-runtime": "workspace:^",
+    "@agentbrain-harness/client-ui-layout": "workspace:^",
+    "@agentbrain-harness/client-ui-primitives": "workspace:^",
+    "@agentbrain-harness/client-ui-settings": "workspace:^",
+    "@agentbrain-harness/client-ui-input-trigger": "workspace:^",
+    "@agentbrain-harness/client-ui-slots": "workspace:^",
+    "@agentbrain-harness/commands": "workspace:^",
+    "@agentbrain-harness/compaction": "workspace:^",
+    "@agentbrain-harness/goal": "workspace:^",
+    "@agentbrain-harness/invariants": "workspace:^",
+    "@agentbrain-harness/llm-retry": "workspace:^",
+    "@agentbrain-harness/permission-presets": "workspace:^",
+    "@agentbrain-harness/plan-mode": "workspace:^",
+    "@agentbrain-harness/session-projection": "workspace:^",
+    "@agentbrain-harness/session-stats": "workspace:^",
+    "@agentbrain-harness/token-meter": "workspace:^",
+    "@agentbrain-harness/tool-todo": "workspace:^",
+    "@agentbrain-harness/tools": "workspace:^",
+    "@types/react": "~18.3.1",
+    "react": "^18.2.0",
+    "@agentbrain-harness/settings": "workspace:^"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/invariant.js",
+    "lib/client.js",
+    "lib/types/**/*.d.ts"
+  ]
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "ABH Pre-Push Checks"
+  short_description: "Run the relevant agentBrain Harness checks before push"
+  default_prompt: "Use $abh-pre-push-checks before pushing this agentBrain Harness branch."

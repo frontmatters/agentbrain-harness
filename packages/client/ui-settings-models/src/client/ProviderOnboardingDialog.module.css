@@ -1,0 +1,220 @@
+.description {
+  margin: 0 0 22px;
+  font-size: 14px;
+  line-height: 21px;
+  color: var(--ab-web-alias-label-secondary);
+  text-align: center;
+}
+
+/* The account-login buttons, shown first: the recommended provider spans the
+   full width, the rest sit two-up in the grid. */
+.signin {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.signinPrimary {
+  grid-column: 1 / -1;
+}
+
+.signinCell {
+  min-width: 0;
+}
+
+.primary,
+.secondary,
+.ghost {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 13px 18px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+
+.primary {
+  color: var(--ab-web-alias-label-primary-foreground);
+  background: var(--ab-web-alias-button-primary-fill);
+}
+
+.primary:hover:not(:disabled) {
+  background: var(--ab-web-alias-button-primary-hover);
+}
+
+.secondary {
+  color: var(--ab-web-alias-label-primary);
+  background: var(--ab-web-alias-button-elevated-fill);
+  border-color: var(--ab-web-alias-border-l2);
+}
+
+.secondary:hover:not(:disabled) {
+  background: var(--ab-web-alias-interactive-bg-hover-solid);
+}
+
+.ghost {
+  width: auto;
+  color: var(--ab-web-alias-label-secondary);
+  background: transparent;
+  border-color: var(--ab-web-alias-border-l2);
+}
+
+.ghost:hover:not(:disabled) {
+  background: var(--ab-web-alias-interactive-bg-hover);
+}
+
+.primary:disabled,
+.secondary:disabled,
+.ghost:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.buttonMark {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+}
+
+.error {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: var(--ab-web-alias-state-error-primary);
+}
+
+/* A labelled rule between the sign-in buttons and the other paths. */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ab-web-alias-label-tertiary);
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--ab-web-alias-border-l2);
+}
+
+/* The collapsed rows (and their expanded panels) for the non-account paths. */
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rowCard {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  text-align: left;
+  padding: 13px 15px;
+  background: transparent;
+  border: 1px solid var(--ab-web-alias-border-l2);
+  border-radius: 11px;
+  color: var(--ab-web-alias-label-primary);
+  cursor: pointer;
+}
+
+.rowCard:hover {
+  background: var(--ab-web-alias-interactive-bg-hover);
+}
+
+.rowIconWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  border-radius: 8px;
+  background: var(--ab-web-alias-bg-layer-2);
+}
+
+.rowIcon {
+  width: 19px;
+  height: 19px;
+  stroke: var(--ab-web-alias-label-secondary);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.rowText {
+  flex: 1;
+  min-width: 0;
+}
+
+.rowTitle {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.rowHint {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--ab-web-alias-label-tertiary);
+}
+
+.chevron {
+  width: 16px;
+  height: 16px;
+  stroke: var(--ab-web-alias-label-tertiary);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.badge {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ab-web-alias-state-success-primary);
+  border: 1px solid var(--ab-web-alias-state-success-tertiary);
+  border-radius: 999px;
+  padding: 2px 8px;
+}
+
+/* An expanded path (the API-key editor or the local-model picker). */
+.panel {
+  border: 1px solid var(--ab-web-alias-brand-primary-new-colorprimary-new-color);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.panelActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.later {
+  display: block;
+  margin: 18px auto 0;
+  padding: 4px 8px;
+  color: var(--ab-web-alias-label-secondary);
+  background: transparent;
+  border: 0;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.later:hover {
+  color: var(--ab-web-alias-label-primary);
+}

@@ -1,0 +1,133 @@
+{
+  "name": "@agentbrain-harness/base",
+  "description": "The shared abh core as a profile bundle: every profile's first patch layer, inserting the base plugin rows over the empty profile root",
+  "version": "0.1.0-rc.8",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frontmatters/agentbrain-harness.git",
+    "directory": "packages/bundle/base"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./invariant": {
+      "types": "./lib/types/invariant.d.ts",
+      "default": "./lib/invariant.js"
+    },
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/invariant.js",
+    "cordis.patch.yml",
+    "lib/types/**/*.d.ts"
+  ],
+  "license": "MIT",
+  "abh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "dependencies": {
+    "@agentbrain-harness/cordis-plugin-hmr": "workspace:^",
+    "@agentbrain-harness/cordis-plugin-timer": "workspace:^",
+    "@agentbrain-harness/agent": "workspace:^",
+    "@agentbrain-harness/agent-default-model": "workspace:^",
+    "@agentbrain-harness/agent-loop": "workspace:^",
+    "@agentbrain-harness/attachment-local": "workspace:^",
+    "@agentbrain-harness/shell-env": "workspace:^",
+    "@agentbrain-harness/bash-sandbox": "workspace:^",
+    "@agentbrain-harness/command-compact": "workspace:^",
+    "@agentbrain-harness/command-feedback": "workspace:^",
+    "@agentbrain-harness/command-goal": "workspace:^",
+    "@agentbrain-harness/commands": "workspace:^",
+    "@agentbrain-harness/agentbrain-memory": "workspace:^",
+    "@agentbrain-harness/agentbrain-context": "workspace:^",
+    "@agentbrain-harness/agentbrain-commands": "workspace:^",
+    "@agentbrain-harness/compaction-basic": "workspace:^",
+    "@agentbrain-harness/compaction-tool-result-pruner": "workspace:^",
+    "@agentbrain-harness/credentials-local": "workspace:^",
+    "@agentbrain-harness/authorization": "workspace:^",
+    "@agentbrain-harness/fs-local": "workspace:^",
+    "@agentbrain-harness/fs-observation-policy": "workspace:^",
+    "@agentbrain-harness/fs-sandbox": "workspace:^",
+    "@agentbrain-harness/goal": "workspace:^",
+    "@agentbrain-harness/goal-round-driver": "workspace:^",
+    "@agentbrain-harness/api-gateway": "workspace:^",
+    "@agentbrain-harness/llm": "workspace:^",
+    "@agentbrain-harness/llm-deepseek": "workspace:^",
+    "@agentbrain-harness/llm-pi-ai": "workspace:^",
+    "@agentbrain-harness/llm-retry": "workspace:^",
+    "@agentbrain-harness/permission-presets": "workspace:^",
+    "@agentbrain-harness/plan-mode": "workspace:^",
+    "@agentbrain-harness/provider-overlay": "workspace:^",
+    "@agentbrain-harness/pwsh-sandbox": "workspace:^",
+    "@agentbrain-harness/repeat-tool-reminder": "workspace:^",
+    "@agentbrain-harness/sandbox-local": "workspace:^",
+    "@agentbrain-harness/sandbox-policy": "workspace:^",
+    "@agentbrain-harness/session": "workspace:^",
+    "@agentbrain-harness/session-checkpoint-policy": "workspace:^",
+    "@agentbrain-harness/session-persistence-jsonl": "workspace:^",
+    "@agentbrain-harness/session-projection": "workspace:^",
+    "@agentbrain-harness/session-query-sqlite": "workspace:^",
+    "@agentbrain-harness/session-telemetry-otel": "workspace:^",
+    "@agentbrain-harness/session-title": "workspace:^",
+    "@agentbrain-harness/session-title-first-prompt-llm": "workspace:^",
+    "@agentbrain-harness/settings-file": "workspace:^",
+    "@agentbrain-harness/skill": "workspace:^",
+    "@agentbrain-harness/skill-badge": "workspace:^",
+    "@agentbrain-harness/skill-filesystem": "workspace:^",
+    "@agentbrain-harness/spill-local": "workspace:^",
+    "@agentbrain-harness/spill-policy": "workspace:^",
+    "@agentbrain-harness/subagent": "workspace:^",
+    "@agentbrain-harness/subagent-fork-in-process": "workspace:^",
+    "@agentbrain-harness/subagent-spawn-in-process": "workspace:^",
+    "@agentbrain-harness/subprocess-local": "workspace:^",
+    "@agentbrain-harness/system-prompt": "workspace:^",
+    "@agentbrain-harness/jobs-local": "workspace:^",
+    "@agentbrain-harness/tool-call-timeout-policy": "workspace:^",
+    "@agentbrain-harness/token-meter": "workspace:^",
+    "@agentbrain-harness/tool-bash": "workspace:^",
+    "@agentbrain-harness/tool-fs": "workspace:^",
+    "@agentbrain-harness/tool-fs-search": "workspace:^",
+    "@agentbrain-harness/tool-goal": "workspace:^",
+    "@agentbrain-harness/tool-pwsh": "workspace:^",
+    "@agentbrain-harness/tool-ralph": "workspace:^",
+    "@agentbrain-harness/tool-skill": "workspace:^",
+    "@agentbrain-harness/tool-str-replace-editor": "workspace:^",
+    "@agentbrain-harness/tool-subagent": "workspace:^",
+    "@agentbrain-harness/tool-subagent-control": "workspace:^",
+    "@agentbrain-harness/tool-subagent-report": "workspace:^",
+    "@agentbrain-harness/tool-jobs": "workspace:^",
+    "@agentbrain-harness/tool-todo": "workspace:^",
+    "@agentbrain-harness/tool-web": "workspace:^",
+    "@agentbrain-harness/tool-workflow": "workspace:^",
+    "@agentbrain-harness/tools": "workspace:^",
+    "@agentbrain-harness/typert-loader": "workspace:^",
+    "@agentbrain-harness/typert-registry": "workspace:^",
+    "@agentbrain-harness/user-approval": "workspace:^",
+    "@agentbrain-harness/user-questions": "workspace:^",
+    "@agentbrain-harness/web": "workspace:^",
+    "@agentbrain-harness/web-search-deepseek": "workspace:^",
+    "@agentbrain-harness/workflow-worker-thread": "workspace:^",
+    "@agentbrain-harness/agent-instructions": "workspace:^"
+  },
+  "peerDependencies": {
+    "@agentbrain-harness/invariants": "workspace:^",
+    "@agentbrain-harness/cordis": "workspace:^"
+  },
+  "devDependencies": {
+    "@agentbrain-harness/invariants": "workspace:^",
+    "@agentbrain-harness/cordis": "workspace:^"
+  }
+}
