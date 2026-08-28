@@ -113,6 +113,10 @@ export function ProviderOnboardingDialog(props: ProviderOnboardingDialogProps): 
   // Per-provider OAuth state for the onboarding chooser.
   type OAuthPhase = 'idle' | 'connecting' | 'connected' | 'error'
   const [oauthPhase, setOauthPhase] = useState<Record<string, OAuthPhase>>(() => ({}))
+  // A device-code grant (GitHub Copilot) needs the user code and verification
+  // page shown here: the browser opens the page, but the user must type the code.
+  // url, code, and lifetime arrive together, so one record keeps them paired.
+  const [oauthNotice, setOauthNotice] = useState<Record<string, { url: string; code?: string; expiresInSeconds?: number }>>(() => ({}))
 
   useEffect(() => {
     if (state.status === 'idle') void controller.load()
@@ -172,10 +176,20 @@ export function ProviderOnboardingDialog(props: ProviderOnboardingDialogProps): 
   const connectOAuth = (id: string, name: string): void => {
     runOAuthConnect(api.oauth, id, {
       onConnecting: () => { setOauthPhase(prev => ({ ...prev, [id]: 'connecting' })) },
+      onAuthUrl: (url, code, expiresInSeconds) => {
+        setOauthNotice(prev => ({
+          ...prev,
+          [id]: code === undefined
+            ? { url }
+            : { url, code, ...expiresInSeconds === undefined ? {} : { expiresInSeconds } },
+        }))
+      },
       onConnected: () => {
-        void finishOAuthConnected(id, name).catch(() => {
-          setOauthPhase(prev => ({ ...prev, [id]: 'error' }))
-        })
+        const settled = finishOAuthConnected(id, name)
+        // finishOAuthConnected swallows every failure through mutateNamespace, so
+        // this rejection backstop has no reachable trigger.
+        /* v8 ignore next */
+        void settled.catch(() => { setOauthPhase(prev => ({ ...prev, [id]: 'error' })) })
       },
       onError: () => { setOauthPhase(prev => ({ ...prev, [id]: 'error' })) },
     })
@@ -257,6 +271,10 @@ export function ProviderOnboardingDialog(props: ProviderOnboardingDialogProps): 
                   const phase = oauthPhase[provider.id] ?? 'idle'
                   const primary = index === 0
                   const label = fill(primary ? 'onboardingContinueProvider' : 'onboardingSigninProvider', provider.name)
+                  const notice = oauthNotice[provider.id]
+                  const expiryMinutes = notice?.expiresInSeconds === undefined
+                    ? undefined
+                    : Math.max(1, Math.round(notice.expiresInSeconds / 60))
                   return (
                     <div key={provider.id} className={primary ? styles.signinPrimary : styles.signinCell}>
                       <button
@@ -271,6 +289,18 @@ export function ProviderOnboardingDialog(props: ProviderOnboardingDialogProps): 
                       </button>
                       {phase === 'error'
                         ? <p className={styles.error}>{t('connectFailed')}</p>
+                        : null}
+                      {phase === 'connecting' && notice?.code !== undefined
+                        ? (
+                          <p className={styles.deviceCode}>
+                            {t('connectDeviceCode')} <code>{notice.code}</code>
+                            {' '}
+                            <a href={notice.url} target="_blank" rel="noopener noreferrer">{notice.url}</a>
+                            {expiryMinutes !== undefined
+                              ? <><br />{fill('connectDeviceCodeExpiry', String(expiryMinutes))}</>
+                              : null}
+                          </p>
+                        )
                         : null}
                     </div>
                   )

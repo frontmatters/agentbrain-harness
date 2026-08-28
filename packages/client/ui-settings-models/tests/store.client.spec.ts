@@ -144,6 +144,36 @@ describe('ModelsSettingsStore', () => {
     expect(store.store.getSnapshot().credentialError).toBe('credential transport refusal')
   })
 
+  it('omits the logo when the overlay entry has an empty logo string', async () => {
+    // Covers store.ts:106 false branch: `logo.length > 0 ? logo : undefined` —
+    // an empty string logo must not set the logo field on the row.
+    const { face, mirror } = api({
+      describeSettings: () => Promise.resolve(ok({
+        writable: true,
+        hasDocument: false,
+        namespaces: [
+          ...NAMESPACES.filter(namespace => namespace.ns !== 'ui-provider-overlay'),
+          {
+            ns: 'ui-provider-overlay',
+            schema: {},
+            value: { openai: { logo: '' } },
+            user: {},
+            base: { openai: { logo: '' } },
+            applies: 'live' as const,
+            secrets: [],
+            revision: 0,
+          },
+        ] as never,
+      })),
+    })
+    const store = new ModelsSettingsStore(face, settingsSchema, mirror)
+    await store.load()
+    const state = store.store.getSnapshot()
+    const byProvider = new Map(state.rows.map(row => [row.entry.provider, row]))
+    // An empty-string logo resolves to undefined, so the row carries no logo field.
+    expect(byProvider.get('openai')?.logo).toBeUndefined()
+  })
+
   it('surfaces a directory failure and keeps the last good rows', async () => {
     const { face, mirror } = api()
     const store = new ModelsSettingsStore(face, settingsSchema, mirror)

@@ -14,7 +14,9 @@ describe('BootPage', () => {
   it('draws the loading skeleton before any plugin state arrives', () => {
     const { el } = mount()
     expect(el.firstElementChild?.getAttribute('data-abh-boot')).toBe('')
-    expect(el.textContent).toContain('HARNESS')
+    // The brand wordmark renders "agentBrain" as SVG text (the HARNESS badge is
+    // graphic, so it never reaches textContent).
+    expect(el.textContent).toContain('agentBrain')
     expect(el.textContent).toContain('Loading plugins…')
   })
 

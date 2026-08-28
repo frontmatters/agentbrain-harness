@@ -88,6 +88,24 @@
   color: var(--ab-web-alias-state-error-primary);
 }
 
+.deviceCode {
+  grid-column: 1 / -1;
+  margin: 8px 0 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ab-web-alias-label-secondary);
+}
+
+.deviceCode code {
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: var(--ab-web-alias-bg-module-platform);
+  color: var(--ab-web-alias-label-primary);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
 /* A labelled rule between the sign-in buttons and the other paths. */
 .divider {
   display: flex;

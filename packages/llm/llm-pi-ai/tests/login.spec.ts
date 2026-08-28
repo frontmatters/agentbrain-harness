@@ -127,6 +127,7 @@ describe('pi-ai login flows', () => {
       { type: 'auth_url', url: 'https://auth.example/start', instructions: 'Approve in the tab' },
       { type: 'auth_url', url: 'https://auth.example/plain' },
       { type: 'device_code', userCode: 'WXYZ-1234', verificationUri: 'https://device.example' },
+      { type: 'device_code', userCode: 'ABCD-5678', verificationUri: 'https://device.example/2', expiresInSeconds: 900 },
       { type: 'progress', message: 'Exchanging the code' },
       // pi-ai's event union is open; an unrecognised member must still show
       // the human that something is happening.
@@ -147,6 +148,12 @@ describe('pi-ai login flows', () => {
         message: 'Enter this code on the verification page to finish signing in.',
         url: 'https://device.example',
         code: 'WXYZ-1234',
+      },
+      {
+        message: 'Enter this code on the verification page to finish signing in.',
+        url: 'https://device.example/2',
+        code: 'ABCD-5678',
+        expiresInSeconds: 900,
       },
       { message: 'Exchanging the code' },
       { message: 'Signing in…' },

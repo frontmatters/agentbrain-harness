@@ -96,9 +96,21 @@
     - id: directory-picker
       name: '@agentbrain-harness/host-directory-picker-auto'
 
-    # Read-only projection of current Loader entries for trusted client RPCs.
+    # Projection of current Loader entries for trusted client RPCs, plus GUI
+    # enable/disable for an allowlist of optional leaf features. Only entries
+    # whose absence removes a feature without breaking the app are listed;
+    # core plugins stay read-only so the panel can never brick a deployment.
     - id: plugin-inventory
       name: '@agentbrain-harness/host-plugin-inventory'
+      config:
+        togglable:
+          - session-log-download
+          - ui-goal
+          - ui-jobs
+          - ui-message-feedback
+          - ui-deliverables
+          - ui-reference
+          - ui-workflow-run
 
     - id: agentbrain-addons
       name: '@agentbrain-harness/host-agentbrain-addons'
@@ -146,12 +158,19 @@
         surfaceContext: true
         trustedHosts: !!js ctx.webStartup.trustedHosts
 
-    # The client-plugin reload chain, always mounted: it is idle until a
-    # rebuild watcher (pnpm run dev:web) actually rewrites client bundles. It
-    # is a row rather than a child of web-runtime because its node half is a
+    # The client-plugin reload chain. Disabled until its reload lifecycle is
+    # tested (the same reason the base `hmr` row is disabled): a live plugin
+    # reload re-applies plugins before the Remote namespaces are re-established,
+    # so a bundle rewrite while a page is open (a rebuild, or the poll catching
+    # up after sleep) tears the client context down mid-flight — the inspect and
+    # inventory consumers see an inactive context and the root renders before
+    # registration, blanking the page. Re-enable once the reload re-establishes
+    # `ctx.remote` before re-applying its consumers.
+    # It is a row rather than a child of web-runtime because its node half is a
     # client-side package, which a host-side bundle cannot import.
     - id: client-hmr
       name: '@agentbrain-harness/client-hmr'
+      disabled: true
 
     # ── browser plugin roster (abh.client rows; node halves are layer-2 hosts) ──
 

@@ -10,6 +10,9 @@
     - button "Plugins":
       - img
       - text: Plugins
+    - button "AgentBrain":
+      - img
+      - text: AgentBrain
     - button "Agent presets":
       - img
       - text: Agent presets

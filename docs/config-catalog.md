@@ -909,6 +909,22 @@ export interface Config {
 
 Source: [`packages/host/frontend-static/src/index.ts:28`](../packages/host/frontend-static/src/index.ts)
 
+<a id="agentbrain-harnesshost-plugin-inventory"></a>
+
+## `@agentbrain-harness/host-plugin-inventory`
+
+Requires: `loader`
+
+```ts config-catalog
+/** Deployment policy for the plugin inventory surface. */
+export interface PluginInventoryConfig {
+  /** Loader entry ids the deployment allows the GUI to enable/disable; all others stay read-only. */
+  readonly togglable: readonly string[]
+}
+```
+
+Source: [`packages/host/plugin-inventory/src/index.ts:29`](../packages/host/plugin-inventory/src/index.ts)
+
 <a id="agentbrain-harnesshost-webserver"></a>
 
 ## `@agentbrain-harness/host-webserver`
@@ -3347,7 +3363,6 @@ These load from a `cordis.yml` entry with no `config:` block; they declare no co
 - `@agentbrain-harness/host-agentbrain-addons` — requires `skills` ([`packages/host/agentbrain-addons/src/index.ts`](../packages/host/agentbrain-addons/src/index.ts))
 - `@agentbrain-harness/host-directory-picker-auto` — requires `webServer` · `loader` ([`packages/host/directory-picker-auto/src/index.ts`](../packages/host/directory-picker-auto/src/index.ts))
 - `@agentbrain-harness/host-directory-picker-native` ([`packages/host/directory-picker-native/src/index.ts`](../packages/host/directory-picker-native/src/index.ts))
-- `@agentbrain-harness/host-plugin-inventory` — requires `loader` ([`packages/host/plugin-inventory/src/index.ts`](../packages/host/plugin-inventory/src/index.ts))
 - `@agentbrain-harness/llm` ([`packages/llm/llm/src/index.ts`](../packages/llm/llm/src/index.ts))
 - `@agentbrain-harness/lsp` ([`packages/lsp/lsp/src/index.ts`](../packages/lsp/lsp/src/index.ts))
 - `@agentbrain-harness/schedule` — requires `agents` · `sessions` · `tools` · `sessionPersistence` ([`packages/schedule/schedule/src/index.ts`](../packages/schedule/schedule/src/index.ts))

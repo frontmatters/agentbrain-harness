@@ -431,6 +431,33 @@ describe('ProviderOnboardingDialog', () => {
     openSpy.mockRestore()
   })
 
+  it('shows the GitHub device code and verification page while connecting', async () => {
+    vi.spyOn(window, 'open').mockImplementation(() => null)
+    const oauthBegin = vi.fn(() => Promise.resolve(ok({ authUrl: 'https://github.com/login/device', code: 'ABCD-1234' })))
+    const h = harness({ providerList: [{ id: 'github-copilot', name: 'GitHub Copilot' }], oauth: { begin: oauthBegin } })
+    render(<ProviderOnboardingDialog {...h.props} />)
+    await screen.findByRole('dialog')
+    fireEvent.click(await screen.findByRole('button', { name: continueLabel('GitHub Copilot') }))
+    await waitFor(() => { expect(h.oauthBegin).toHaveBeenCalledWith({ providerId: 'github-copilot' }) })
+    expect(await screen.findByText('ABCD-1234')).toBeTruthy()
+    expect(screen.getByText(en.connectDeviceCode, { exact: false })).toBeTruthy()
+    expect(screen.getByRole('link', { name: 'https://github.com/login/device' }).getAttribute('href')).toBe('https://github.com/login/device')
+    // No expiry reported, so no validity line renders.
+    expect(screen.queryByText(/valid for/i)).toBeNull()
+  })
+
+  it('shows the device code validity when the flow reports an expiry', async () => {
+    vi.spyOn(window, 'open').mockImplementation(() => null)
+    const oauthBegin = vi.fn(() => Promise.resolve(ok({ authUrl: 'https://github.com/login/device', code: 'ABCD-1234', expiresInSeconds: 900 })))
+    const h = harness({ providerList: [{ id: 'github-copilot', name: 'GitHub Copilot' }], oauth: { begin: oauthBegin } })
+    render(<ProviderOnboardingDialog {...h.props} />)
+    await screen.findByRole('dialog')
+    fireEvent.click(await screen.findByRole('button', { name: continueLabel('GitHub Copilot') }))
+    await screen.findByText('ABCD-1234')
+    // 900s → ~15 min validity line.
+    expect(await screen.findByText(/valid for about 15 min/i)).toBeTruthy()
+  })
+
   it('begins the anthropic flow from the Claude button', async () => {
     vi.spyOn(window, 'open').mockImplementation(() => null)
     const h = harness()

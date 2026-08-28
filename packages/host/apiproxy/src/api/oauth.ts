@@ -22,6 +22,8 @@ export interface OAuthBeginView {
   authUrl: string
   /** Device code shown by providers that use a device authorization flow. */
   code?: string
+  /** Seconds until the device code expires, when the flow reports one. */
+  expiresInSeconds?: number
 }
 
 /** One connectable account provider surfaced from the host authorization registry. */

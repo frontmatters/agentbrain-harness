@@ -84,4 +84,14 @@ describe('abh path helpers', () => {
       await rm(root, { recursive: true, force: true })
     }
   })
+
+  it('canonicalizes a watcher path that already fully exists', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'abh-watch-path-'))
+    try {
+      const canonical = await realpath(root)
+      await expect(canonicalizeWatchPath(root)).resolves.toBe(canonical)
+    } finally {
+      await rm(root, { recursive: true, force: true })
+    }
+  })
 })

@@ -14,6 +14,14 @@ Every publishable manifest sets `"publishConfig": { "access": "public" }`, so no
 publish command passes `--access`; the manifest owns the level. The Free plan is
 sufficient because every package is public.
 
+## Public GitHub snapshot releases
+
+Development happens on the private `origin` (Gitea) with its full history. The public GitHub remote (`github`) receives only validated, tagged snapshots: one clean commit per version, never the development history.
+
+`pnpm run release` publishes the current tree as `v<version>` (from the root `package.json`). It refuses a dirty tree, refuses a version already tagged on GitHub, runs the gate suite (`lint`, `typecheck`, `doc-sync`, `hygiene`, `build`, `test:coverage`), then commits the tree as one clean commit authored under the project GitHub identity, pushes it to `github`'s `main`, tags it, and creates a GitHub Release. `--dry-run` shows what would publish without pushing; `--skip-gates` publishes an already-validated tree without re-running the gates.
+
+This is separate from the npm publish flow below.
+
 ## Three independent sequences
 
 Three package groups release on separate version lines, tags, and workflows. They

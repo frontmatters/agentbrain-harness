@@ -1,7 +1,7 @@
 {
   "name": "@agentbrain-harness/subprocess-e2b",
   "description": "E2B subprocess implementation for agentBrain Harness",
-  "version": "0.1.0-rc.8",
+  "version": "0.1.0-rc.9",
   "publishConfig": {
     "access": "public"
   },

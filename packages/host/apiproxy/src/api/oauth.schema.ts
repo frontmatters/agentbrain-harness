@@ -42,6 +42,7 @@ export const oauthBeginRequestSchema = z.object({
 export const oauthBeginValueSchema = z.object({
   authUrl: z.url(),
   code: z.string().min(1).optional(),
+  expiresInSeconds: z.number().optional(),
 }) satisfies z.ZodType<Wire<ResponseValue<'oauth.begin'>>>
 
 /** oauth.providers request payload (none). */

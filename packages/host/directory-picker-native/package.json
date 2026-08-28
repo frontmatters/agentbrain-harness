@@ -1,7 +1,7 @@
 {
   "name": "@agentbrain-harness/host-directory-picker-native",
   "description": "Native-OS-chooser backend of the directory-picker seam for the agentBrain Harness web GUI host",
-  "version": "0.1.0-rc.8",
+  "version": "0.1.0-rc.9",
   "publishConfig": {
     "access": "public"
   },

@@ -9,7 +9,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   firstModelForProvider, fetchOAuthProviders, readProviderOverlay, applyProviderOverlay,
   probeOAuthStatus, beginConnect, disconnect, runOAuthConnect,
-  PROVIDER_OVERLAY_NAMESPACE,
+  PROVIDER_OVERLAY_NAMESPACE, OAUTH_POLL_INTERVAL_MS, OAUTH_POLL_MAX_ATTEMPTS,
 } from '../src/client/connect-provider.ts'
 import type { IApiClient } from '@agentbrain-harness/api-remotes/client'
 
@@ -140,7 +140,7 @@ describe('runOAuthConnect', () => {
     runOAuthConnect(oauth, 'x', handlers)
     expect(handlers.onConnecting).toHaveBeenCalledOnce()
     await flush()
-    expect(handlers.onAuthUrl).toHaveBeenCalledWith('https://auth')
+    expect(handlers.onAuthUrl).toHaveBeenCalledWith('https://auth', undefined, undefined)
     expect(open).toHaveBeenCalledWith('https://auth', '_blank', 'noopener')
     await vi.advanceTimersByTimeAsync(1500)
     expect(handlers.onConnected).toHaveBeenCalledOnce()
@@ -172,9 +172,43 @@ describe('runOAuthConnect', () => {
     const handlers = { onConnecting: vi.fn(), onAuthUrl: vi.fn(), onConnected: vi.fn(), onError: vi.fn() }
     runOAuthConnect(oauth, 'x', handlers)
     await flush()
-    // 80 polls at ~1500 ms each; advance past the cap so onError fires.
-    await vi.advanceTimersByTimeAsync(1500 * 81)
+    // Advance one interval past the cap so the final poll fires onError.
+    await vi.advanceTimersByTimeAsync(OAUTH_POLL_INTERVAL_MS * (OAUTH_POLL_MAX_ATTEMPTS + 1))
     expect(handlers.onConnected).not.toHaveBeenCalled()
+    expect(handlers.onError).toHaveBeenCalledOnce()
+  })
+
+  it('keeps polling past the old two-minute cap for a slow device flow', async () => {
+    vi.spyOn(window, 'open').mockImplementation(() => null)
+    const oauth = {
+      begin: vi.fn(() => Promise.resolve(okResult({ authUrl: 'https://github.com/login/device', code: 'ABCD-1234' }))),
+      status: vi.fn(() => Promise.resolve(okResult({ connected: false }))),
+    } as unknown as OauthConnectFace
+    const handlers = { onConnecting: vi.fn(), onAuthUrl: vi.fn(), onConnected: vi.fn(), onError: vi.fn() }
+    runOAuthConnect(oauth, 'x', handlers)
+    await flush()
+    // Two minutes was the old cap; the flow must still be polling, not failed.
+    await vi.advanceTimersByTimeAsync(OAUTH_POLL_INTERVAL_MS * 90)
+    expect(handlers.onError).not.toHaveBeenCalled()
+  })
+
+  it('sizes the poll window to the device code lifetime and forwards it', async () => {
+    vi.spyOn(window, 'open').mockImplementation(() => null)
+    const expiresInSeconds = 90 // 60 polls at 1500 ms
+    const oauth = {
+      begin: vi.fn(() => Promise.resolve(okResult({ authUrl: 'https://github.com/login/device', code: 'ABCD-1234', expiresInSeconds }))),
+      status: vi.fn(() => Promise.resolve(okResult({ connected: false }))),
+    } as unknown as OauthConnectFace
+    const handlers = { onConnecting: vi.fn(), onAuthUrl: vi.fn(), onConnected: vi.fn(), onError: vi.fn() }
+    runOAuthConnect(oauth, 'x', handlers)
+    await flush()
+    expect(handlers.onAuthUrl).toHaveBeenCalledWith('https://github.com/login/device', 'ABCD-1234', expiresInSeconds)
+    const maxAttempts = Math.ceil((expiresInSeconds * 1000) / OAUTH_POLL_INTERVAL_MS)
+    // One interval before the cap: still polling.
+    await vi.advanceTimersByTimeAsync(OAUTH_POLL_INTERVAL_MS * (maxAttempts - 1))
+    expect(handlers.onError).not.toHaveBeenCalled()
+    // Crossing the cap fails, well before the default 600-poll window.
+    await vi.advanceTimersByTimeAsync(OAUTH_POLL_INTERVAL_MS * 2)
     expect(handlers.onError).toHaveBeenCalledOnce()
   })
 

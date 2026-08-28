@@ -2948,7 +2948,7 @@ export const TYPE_API: readonly TypeApiEntry[] = [
   },
   {
     name: 'AuthorizationNotice',
-    declaration: 'export interface AuthorizationNotice {\n    message: string;\n    url?: string;\n    code?: string;\n}',
+    declaration: 'export interface AuthorizationNotice {\n    message: string;\n    url?: string;\n    code?: string;\n    expiresInSeconds?: number;\n}',
   },
   {
     name: 'AuthorizationOutcome',

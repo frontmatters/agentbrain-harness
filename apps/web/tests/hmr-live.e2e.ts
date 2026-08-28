@@ -68,7 +68,11 @@ async function stopTree(child: SubprocessHandle): Promise<void> {
   await child.done
 }
 
-it('hot-reloads a real client-plugin source edit without refreshing the page', async () => {
+// Skipped while the shipped web bundle disables `client-hmr` (its reload blanks
+// the page on a bundle change; see the client-hmr disable Agent Note). Browser
+// HMR is not part of the composition, so a source edit no longer hot-reloads.
+// Re-enable this test when client-hmr returns without the reload-blank regression.
+it.skip('hot-reloads a real client-plugin source edit without refreshing the page', async () => {
   const world = await mkdtemp(join(tmpdir(), 'abh-web-hmr-world-'))
   const sourcePath = join(REPO_ROOT, 'packages/client/ui-conversation/src/client/locales.ts')
   const binPath = join(REPO_ROOT, 'apps/cli/lib/bin.js')

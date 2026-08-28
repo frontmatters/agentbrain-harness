@@ -1,7 +1,7 @@
 {
   "name": "@agentbrain-harness/host-plugin-inventory",
   "description": "Read-only Remote projection of current Cordis Loader plugin state",
-  "version": "0.1.0-rc.8",
+  "version": "0.1.0-rc.9",
   "publishConfig": {
     "access": "public"
   },
@@ -49,20 +49,28 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "zod": "^4.4.3"
+    "zod": "^4.4.3",
+    "js-yaml": "^4.1.0"
   },
   "peerDependencies": {
     "@agentbrain-harness/cordis-plugin-loader": "workspace:^",
+    "@agentbrain-harness/cordis-plugin-include": "workspace:^",
     "@agentbrain-harness/brand": "workspace:^",
+    "@agentbrain-harness/home-paths": "workspace:^",
     "@agentbrain-harness/invariants": "workspace:^",
+    "@agentbrain-harness/schemastery": "workspace:^",
     "@agentbrain-harness/typert-protocol": "workspace:^",
     "@agentbrain-harness/cordis": "workspace:^"
   },
   "devDependencies": {
     "@agentbrain-harness/cordis-plugin-loader": "workspace:^",
+    "@agentbrain-harness/cordis-plugin-include": "workspace:^",
     "@agentbrain-harness/brand": "workspace:^",
+    "@agentbrain-harness/home-paths": "workspace:^",
     "@agentbrain-harness/invariants": "workspace:^",
+    "@agentbrain-harness/schemastery": "workspace:^",
     "@agentbrain-harness/typert-protocol": "workspace:^",
-    "@agentbrain-harness/cordis": "workspace:^"
+    "@agentbrain-harness/cordis": "workspace:^",
+    "@types/js-yaml": "^4.0.9"
   }
 }

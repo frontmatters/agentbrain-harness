@@ -55,7 +55,9 @@ export function uuid5(namespace: string, vaultRelativePath: string): string {
   if (!/^[0-9a-f]{32}$/iu.test(normalized)) throw new Error('AgentBrain namespace must be a UUID')
   const namespaceBytes = Buffer.from(normalized, 'hex')
   const digest = createHash('sha1').update(namespaceBytes).update(`agentBrain/${vaultRelativePath}`).digest()
+  /* v8 ignore next -- SHA-1 digest() always returns 20 bytes; index 6 is never undefined */
   digest[6] = ((digest[6] ?? 0) & 0x0f) | 0x50
+  /* v8 ignore next -- SHA-1 digest() always returns 20 bytes; index 8 is never undefined */
   digest[8] = ((digest[8] ?? 0) & 0x3f) | 0x80
   const hex = digest.subarray(0, 16).toString('hex')
   return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`

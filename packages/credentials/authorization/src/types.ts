@@ -23,6 +23,8 @@ export interface AuthorizationNotice {
   url?: string
   /** A short code the human must enter on that page. */
   code?: string
+  /** Seconds until a device code expires, when the flow reports one. */
+  expiresInSeconds?: number
 }
 
 /** One choice offered by a `select` prompt. */

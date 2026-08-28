@@ -139,7 +139,7 @@ export async function probeOAuthStatus(
 export async function beginConnect(
   oauth: Pick<IApiClient['oauth'], 'begin'>,
   id: string,
-): Promise<{ authUrl: string; code?: string }> {
+): Promise<{ authUrl: string; code?: string; expiresInSeconds?: number }> {
   const response = await oauth.begin({ providerId: id })
   if (!response.result.ok) throw new Error(response.result.error.message)
   return response.result.value
@@ -190,18 +190,31 @@ export async function firstModelForProvider(
 export interface OAuthConnectHandlers {
   /** The flow has started and the auth URL is being requested. */
   onConnecting: () => void
-  /** The authorization URL is available (before it is opened), with an optional device code. */
-  onAuthUrl?: (url: string, code?: string) => void
+  /** The authorization URL is available (before it is opened), with an optional device code and its lifetime. */
+  onAuthUrl?: (url: string, code?: string, expiresInSeconds?: number) => void
   /** A status poll observed the credential landed. */
   onConnected: () => void
   /** The begin call failed, or polling reached its cap. */
   onError: () => void
 }
 
+/** Status poll cadence for a running OAuth connect flow. */
+export const OAUTH_POLL_INTERVAL_MS = 1500
+/**
+ * Status polls before a running connect flow gives up (~15 minutes).
+ *
+ * A device-code grant (GitHub Copilot) has the human leave for the browser to
+ * enter the code and clear 2FA, which routinely passes two minutes; the poll
+ * must outlast the device code's usual lifetime so the connect resolves when the
+ * credential lands instead of failing while the flow is still valid.
+ */
+export const OAUTH_POLL_MAX_ATTEMPTS = 600
+
 /**
  * Run the OAuth connect flow: begin, open the authorization URL in a new tab,
- * then poll status every ~1500 ms until connected or the ~2 min cap (80 polls).
- * Shared by the Models connect row and first-run onboarding.
+ * then poll status every {@link OAUTH_POLL_INTERVAL_MS} until connected or the
+ * {@link OAUTH_POLL_MAX_ATTEMPTS} cap. Shared by the Models connect row and
+ * first-run onboarding.
  * @param oauth - the oauth wire face carrying begin and status.
  * @param id - the pi-ai provider id to connect.
  * @param handlers - state callbacks for each phase transition.
@@ -214,20 +227,23 @@ export function runOAuthConnect(
   handlers.onConnecting()
   void beginConnect(oauth, id)
     .then((result) => {
-      if (result.code === undefined) handlers.onAuthUrl?.(result.authUrl)
-      else handlers.onAuthUrl?.(result.authUrl, result.code)
+      handlers.onAuthUrl?.(result.authUrl, result.code, result.expiresInSeconds)
       window.open(result.authUrl, '_blank', 'noopener')
+      // Poll for the device code's own lifetime when the flow reports one, so
+      // the window matches the provider instead of a fixed default.
+      const maxAttempts = result.expiresInSeconds === undefined
+        ? OAUTH_POLL_MAX_ATTEMPTS
+        : Math.ceil((result.expiresInSeconds * 1000) / OAUTH_POLL_INTERVAL_MS)
       let attempts = 0
-      const MAX_ATTEMPTS = 80
       const poll = (): void => {
         attempts++
         void probeOAuthStatus(oauth, id).then((status) => {
           if (status.connected) { handlers.onConnected(); return }
-          if (attempts >= MAX_ATTEMPTS) { handlers.onError(); return }
-          setTimeout(poll, 1500)
+          if (attempts >= maxAttempts) { handlers.onError(); return }
+          setTimeout(poll, OAUTH_POLL_INTERVAL_MS)
         })
       }
-      setTimeout(poll, 1500)
+      setTimeout(poll, OAUTH_POLL_INTERVAL_MS)
     })
     .catch(() => { handlers.onError() })
 }

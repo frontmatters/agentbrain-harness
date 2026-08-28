@@ -36,6 +36,8 @@ export interface AddonInfo {
 export interface ManagedSkillInfo {
   readonly name: string
   readonly description: string
+  /** Extra routing guidance, or null when the skill declares none. */
+  readonly whenToUse: string | null
   readonly provider: string
   readonly enabled: boolean
 }
@@ -43,6 +45,19 @@ export interface ManagedSkillInfo {
 /** Point-in-time skill inventory. */
 export interface SkillInventorySnapshot {
   readonly skills: readonly ManagedSkillInfo[]
+}
+
+/** One skill's full instruction body for the detail view. */
+export interface SkillDetail {
+  readonly name: string
+  readonly description: string
+  /** Extra routing guidance, or null when the skill declares none. */
+  readonly whenToUse: string | null
+  readonly provider: string
+  /** Markdown instruction body loaded from the skill definition. */
+  readonly content: string
+  /** Frontmatter tags declared by the skill, empty when none. */
+  readonly tags: readonly string[]
 }
 
 /** Point-in-time addon inventory. */

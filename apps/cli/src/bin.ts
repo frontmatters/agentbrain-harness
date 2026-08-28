@@ -29,11 +29,21 @@ const invocation = parseDshArgs(process.argv.slice(2), readVersion())
 switch (invocation.mode) {
   case 'profile': {
     const { runProfile } = await import('./profile-boot.ts')
+    let args = invocation.args
+    // The web surface is a long-running server: reconcile against an already
+    // running one so repeat starts do not stack stale-bundle servers on
+    // different ports. A stale lock (dead pid) is dropped by the guard itself.
+    if (invocation.profile === 'web') {
+      const { ensureSingleWebInstance, clearInstanceLock, realWebLockDeps } = await import('./web-instance-lock.ts')
+      const deps = realWebLockDeps()
+      args = await ensureSingleWebInstance(invocation.args, deps)
+      process.once('exit', () => { clearInstanceLock(deps) })
+    }
     await runProfile({
       environment: loadLayeredEnv('abh'),
       profile: invocation.profile,
       patchFiles: invocation.patches,
-      args: invocation.args,
+      args,
     })
     break
   }

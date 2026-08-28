@@ -31,11 +31,13 @@
 }
 
 .wordmark {
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  display: flex;
   color: var(--ab-web-alias-label-primary, var(--ab-harness-boot-label-primary));
+}
+
+.wordmark svg {
+  height: 26px;
+  width: auto;
 }
 
 .hint {

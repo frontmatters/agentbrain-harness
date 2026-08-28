@@ -62,6 +62,7 @@ function relay(event: AuthEvent, session: AuthorizationSession): void {
         message: 'Enter this code on the verification page to finish signing in.',
         url: event.verificationUri,
         code: event.userCode,
+        ...event.expiresInSeconds === undefined ? {} : { expiresInSeconds: event.expiresInSeconds },
       })
       return
     case 'progress':

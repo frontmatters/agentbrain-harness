@@ -1508,4 +1508,54 @@ describe('ModelsSection OAuth connect row', () => {
     await act(async () => { fireEvent.click(btn) })
     expect(oauthLogout).toHaveBeenCalledWith({ providerId: 'openai-codex' })
   })
+
+  it('shows the device code when oauth.begin resolves with a code', async () => {
+    // Covers the onAuthUrl code branch (line 279) and the device-code display
+    // ternary (line 601): when begin returns a code, setOauthCode is called and
+    // the code renders next to the auth URL.
+    vi.useFakeTimers({ shouldAdvanceTime: true })
+    vi.spyOn(window, 'open').mockImplementation(() => null)
+    const oauthBegin = vi.fn(() => Promise.resolve(ok({ authUrl: 'https://github.com/login/device', code: 'WXYZ-5678' })))
+    // A status that never resolves keeps the flow in the connecting phase so the
+    // device-code paragraph stays visible for the assertion.
+    const oauthStatus = vi.fn(() => new Promise<never>(() => {}))
+    try {
+      await mountSection({ oauth: { begin: oauthBegin, status: oauthStatus } })
+      const connect = await screen.findByRole('button', { name: en.connectProvider.replace('{name}', 'ChatGPT') })
+      await act(async () => { fireEvent.click(connect) })
+      await act(async () => { await Promise.resolve() })
+      // The device code must be visible once begin resolves.
+      expect(await screen.findByText('WXYZ-5678')).toBeTruthy()
+      expect(screen.getByText(en.connectDeviceCode, { exact: false })).toBeTruthy()
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('shows the connect-failed error when finishConnected throws after a successful poll', async () => {
+    // Covers the onConnected callback (line 281) and its catch handler (line 283):
+    // a controller.load() rejection after the poll reports connected triggers the
+    // error phase, which renders the connectFailed paragraph.
+    // Call order: first call is the initial probe on mount (returns not-connected
+    // so the Connect button is visible); second call is the first status poll
+    // after clicking Connect (returns connected so onConnected fires).
+    vi.useFakeTimers({ shouldAdvanceTime: true })
+    vi.spyOn(window, 'open').mockImplementation(() => null)
+    const oauthStatus = vi.fn()
+      .mockResolvedValueOnce(ok({ connected: false }))
+      .mockResolvedValueOnce(ok({ connected: true, type: 'oauth' }))
+    try {
+      const { controller } = await mountSection({ oauth: { status: oauthStatus } })
+      // Spy after mount so the initial store load is unaffected.
+      vi.spyOn(controller, 'load').mockRejectedValueOnce(new Error('reload failed after connect'))
+      const connect = await screen.findByRole('button', { name: en.connectProvider.replace('{name}', 'ChatGPT') })
+      await act(async () => { fireEvent.click(connect) })
+      await act(async () => { await Promise.resolve() })
+      await act(async () => { vi.advanceTimersByTime(1500) })
+      for (let i = 0; i < 6; i++) await act(async () => { await Promise.resolve() })
+      expect(await screen.findByText(en.connectFailed)).toBeTruthy()
+    } finally {
+      vi.useRealTimers()
+    }
+  })
 })

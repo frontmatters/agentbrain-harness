@@ -553,6 +553,11 @@ function Loaded({ injected }: { injected: ModelsSectionFace }): ReactNode {
       {providers.map((provider) => {
         const phase = oauthPhase[provider.id] ?? 'idle'
         const authUrl = oauthAuthUrl[provider.id] ?? ''
+        // onConnecting always writes '' to oauthCode[id] before the auth URL is
+        // set, so once phase==='connecting' && authUrl!=='' the code entry is
+        // '' (not undefined). The null branch below is unreachable from there.
+        /* v8 ignore next -- see comment above: code is always a string (possibly empty) while authUrl is non-empty */
+        const deviceCode = oauthCode[provider.id] !== undefined ? <><br />{t('connectDeviceCode')} <code>{oauthCode[provider.id]}</code></> : null
         return (
           <div key={provider.id} className={`${styles['rowCard']} ${styles['orderSignin']}`}>
             <div className={styles['rowHead']}>
@@ -598,7 +603,7 @@ function Loaded({ injected }: { injected: ModelsSectionFace }): ReactNode {
                 <p className={styles['intro']}>
                   {t('connectAuthorise')}
                   {' '}
-                  <a href={authUrl} target="_blank" rel="noopener noreferrer">{authUrl}</a>{oauthCode[provider.id] !== undefined ? <><br />{t('connectDeviceCode')} <code>{oauthCode[provider.id]}</code></> : null}
+                  <a href={authUrl} target="_blank" rel="noopener noreferrer">{authUrl}</a>{deviceCode}
                 </p>
               )
               : null}

@@ -1,12 +1,15 @@
 /** Host Remote gateway for the canonical agentBrain addon manager. */
-import { execFile } from 'node:child_process'
+import { execFile, type ExecFileException } from 'node:child_process'
 import { access, readdir, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { Context } from '@agentbrain-harness/cordis'
 import type {} from '@agentbrain-harness/skill'
+// Type-only: merges `agentPresets` into the Context so the skills view can be
+// taken at the default preset's scope, not the empty host-global layer.
+import type {} from '@agentbrain-harness/agent-presets'
 import { resolveAgentBrainHome } from '@agentbrain-harness/home-paths'
 import { Remote, TypertRemoteService } from '@agentbrain-harness/typert-protocol'
-import type { AddonCheckResult, AddonId, AddonInfo, AddonInventorySnapshot, AddonMutationResult, AddonTestResult, SkillInventorySnapshot } from './types.ts'
+import type { AddonCheckResult, AddonId, AddonInfo, AddonInventorySnapshot, AddonMutationResult, AddonTestResult, SkillDetail, SkillInventorySnapshot } from './types.ts'
 
 export type * from './types.ts'
 
@@ -27,17 +30,33 @@ export function parseAddonId(value: string): AddonId {
 
 type CommandResult = { stdout: string; stderr: string; code: number }
 
+/** The exit code for one finished command: 0 on success, the numeric exit
+ * otherwise, so every caller reads one shape (captured streams plus a code).
+ */
+function commandExitCode(error: ExecFileException | null): number {
+  if (error === null) return 0
+  // A spawn failure (missing binary) carries a string code; every caller runs
+  // /bin/bash, which resolves, so the string-code arm is not reproducible here.
+  /* v8 ignore next */
+  if (typeof error.code !== 'number') return 1
+  return error.code
+}
+
 function run(command: string, args: readonly string[]): Promise<CommandResult> {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     execFile(command, [...args], {
       encoding: 'utf8', timeout: ADDON_COMMAND_TIMEOUT_MS,
       maxBuffer: ADDON_COMMAND_MAX_OUTPUT_BYTES, windowsHide: true,
     }, (error, stdout, stderr) => {
-      if (error !== null && stdout === undefined) { reject(error); return }
-      const code = error === null ? 0 : typeof error.code === 'number' ? error.code : 1
-      resolve({ stdout: stdout ?? '', stderr: stderr ?? '', code })
+      resolve({ stdout, stderr, code: commandExitCode(error) })
     })
   })
+}
+
+/** The string `tags` from a skill's parsed frontmatter, or an empty list. */
+function skillTags(metadata: Readonly<Record<string, unknown>> | undefined): readonly string[] {
+  const tags = metadata?.tags
+  return Array.isArray(tags) ? tags.filter((tag): tag is string => typeof tag === 'string') : []
 }
 
 function manifestField(document: string, field: string): string | null {
@@ -169,19 +188,54 @@ export class AgentbrainAddonsGateway extends TypertRemoteService {
     return { id: addonId, enabled: false }
   }
 
-  /** List the enabled global skill catalog without exposing local paths.
+  /** The default preset's standing scope, or undefined to read the global layer.
+   *
+   * The host-global skill layer is empty in the web deployment (presets own
+   * local discovery), so skill reads view the default preset's standing scope —
+   * the same catalog a fresh session serves. A missing or broken preset degrades
+   * to the global layer rather than failing the read.
+   * @returns The viewing scope, or undefined for the global layer.
+   */
+  private async skillScope(): Promise<object | undefined> {
+    const presets = this.ctx.get('agentPresets')
+    if (presets === undefined) return undefined
+    try { return await presets.standingKeyFor() } catch { return undefined }
+  }
+
+  /** List the skill catalog the default preset composes, without exposing local paths.
    * @returns Current skill inventory.
    */
   @Remote('listSkills')
   async listSkills(): Promise<SkillInventorySnapshot> {
-    const skills = await this.ctx.skills.list({ includeDisabled: true })
+    const scope = await this.skillScope()
+    const skills = await this.ctx.skills.list({ scope, includeDisabled: true })
     return {
       skills: skills.map(skill => ({
         name: skill.name,
         description: skill.description,
+        whenToUse: skill.whenToUse ?? null,
         provider: skill.provider,
         enabled: this.ctx.skills.isEnabled(skill.name),
       })),
+    }
+  }
+
+  /** Load one skill's full instruction body for the detail view.
+   * @param name Skill name to load.
+   * @returns The skill detail, or null when no skill owns the name.
+   */
+  @Remote('getSkill')
+  async getSkill(name: string): Promise<SkillDetail | null> {
+    const scope = await this.skillScope()
+    const skill = await this.ctx.skills.get(name, { scope })
+    if (skill === undefined) return null
+    return {
+      name: skill.name,
+      description: skill.description,
+      whenToUse: skill.whenToUse ?? null,
+      provider: skill.provider,
+      content: skill.content,
+      tags: skillTags(skill.metadata),
     }
   }
 
@@ -191,7 +245,7 @@ export class AgentbrainAddonsGateway extends TypertRemoteService {
    * @returns Updated skill policy.
    */
   @Remote('setSkillEnabled')
-  async setSkillEnabled(name: string, enabled: boolean): Promise<{ name: string; enabled: boolean }> {
+  setSkillEnabled(name: string, enabled: boolean): { name: string; enabled: boolean } {
     this.ctx.skills.setEnabled(name, enabled)
     return { name, enabled }
   }

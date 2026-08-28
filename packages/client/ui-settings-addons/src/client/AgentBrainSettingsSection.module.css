@@ -1,0 +1,95 @@
+/* AgentBrain settings section: one filled card per addon, matching the plugin
+   configuration cards and the shared badge pills. */
+
+.section { display: grid; gap: 12px; padding: 16px; }
+.heading { color: var(--ab-web-alias-label-primary); font-size: 18px; font-weight: 600; line-height: 1.4; margin: 0; }
+.intro { color: var(--ab-web-alias-label-tertiary); font-size: 13px; line-height: 1.5; margin: 0 0 4px; }
+
+.tabs { border-bottom: 1px solid var(--ab-web-alias-border-l2); display: flex; gap: 4px; }
+.tab {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--ab-web-alias-label-secondary);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 500;
+  margin-bottom: -1px;
+  padding: 6px 10px;
+}
+.tab:hover { color: var(--ab-web-alias-label-primary); }
+.tab[data-active='true'] { border-bottom-color: var(--ab-web-alias-state-business-primary); color: var(--ab-web-alias-label-primary); }
+
+.panel { display: grid; gap: 12px; }
+.status { color: var(--ab-web-alias-label-tertiary); }
+.failure { display: grid; gap: 12px; justify-items: start; }
+
+.group { display: grid; gap: 8px; }
+.group + .group { margin-top: 16px; }
+.groupHead { align-items: center; display: flex; gap: 12px; justify-content: space-between; }
+.groupTitle {
+  color: var(--ab-web-alias-label-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  margin: 0;
+  text-transform: uppercase;
+}
+.groupActions { display: flex; flex-shrink: 0; gap: 8px; }
+
+.list { display: grid; gap: 8px; list-style: none; margin: 0; padding: 0; }
+
+.item {
+  align-items: center;
+  background: var(--ab-web-alias-bg-layer-3);
+  border: 1px solid var(--ab-web-alias-border-l2);
+  border-radius: 12px;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  padding: 14px 16px;
+  transition: border-color .16s;
+}
+.item:hover { border-color: var(--ab-web-alias-label-dimmed); }
+
+.identity { display: grid; gap: 6px; min-width: 0; }
+.title { align-items: center; display: flex; flex-wrap: wrap; gap: 8px; }
+.name { color: var(--ab-web-alias-label-primary); font-size: 15px; font-weight: 600; line-height: 1.4; }
+.subtitle { color: var(--ab-web-alias-label-tertiary); font-size: 13px; line-height: 1.5; margin: 0; }
+.subtitle code { font-size: 0.95em; }
+
+/* Source tag and metadata chips share the shared badge pill. */
+.layer,
+.chip {
+  background: var(--ab-web-alias-bg-module-platform);
+  border-radius: 999px;
+  color: var(--ab-web-alias-label-secondary);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 17px;
+  padding: 1px 8px;
+  white-space: nowrap;
+}
+.layer { letter-spacing: 0.04em; text-transform: uppercase; }
+.layer[data-source='local'] { color: var(--ab-web-alias-state-business-primary); }
+.chip[data-kind='skill'] { color: var(--ab-web-alias-state-business-primary); }
+
+.meta { display: flex; flex-wrap: wrap; gap: 6px; }
+.metaLabel { color: var(--ab-web-alias-label-secondary); font-weight: 600; }
+
+/* Skill-detail modal body: metadata chips over the rendered SKILL.md content. */
+.detail { display: grid; gap: 12px; }
+.detailBody {
+  border-top: 1px solid var(--ab-web-alias-border-l2);
+  max-height: min(56vh, 520px);
+  overflow-y: auto;
+  padding-top: 12px;
+  /* Scrolls on the elevated modal surface, so rebind the scrollbar elevation. */
+  --ab-harness-scrollbar-thumb: var(--ab-web-alias-scrollbar-bg-l2);
+  --ab-harness-scrollbar-thumb-hover: var(--ab-web-alias-scrollbar-hover-l2);
+}
+
+.actions { align-items: center; display: flex; flex-shrink: 0; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+.health { font-size: 12px; }
+.health[data-check='ok'] { color: var(--ab-web-alias-state-business-primary); }
+.health[data-check='failed'] { color: var(--ab-web-alias-label-error); }

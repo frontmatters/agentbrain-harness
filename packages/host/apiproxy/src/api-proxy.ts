@@ -584,7 +584,7 @@ function directoryError(error: unknown): RpcError {
  */
 export interface OAuthAuthInteraction {
   /** Called by the LoginService to push an auth URL or other status event. */
-  notify(event: { type: string; url?: string; code?: string }): void
+  notify(event: { type: string; url?: string; code?: string; expiresInSeconds?: number }): void
   /**
    * Called by the LoginService when the provider flow needs a choice. The
    * openai-codex browser flow drives two prompts: first a `select` for the
@@ -3391,16 +3391,20 @@ export function createApiProxy(ctx: Context, defaults: ApiProxyDefaults): ApiPro
         // promise once it arrives. The login continues running server-side
         // after we return: the credential lands in the store, and
         // oauth.status reflects it on the next poll (spec §11a).
-        let resolveUrl!: (value: { authUrl: string; code?: string }) => void
+        let resolveUrl!: (value: { authUrl: string; code?: string; expiresInSeconds?: number }) => void
         let rejectUrl!: (error: unknown) => void
-        const urlPromise = new Promise<{ authUrl: string; code?: string }>((res, rej) => {
+        const urlPromise = new Promise<{ authUrl: string; code?: string; expiresInSeconds?: number }>((res, rej) => {
           resolveUrl = res
           rejectUrl = rej
         })
         const interaction: OAuthAuthInteraction = {
           notify(event) {
             if ((event.type === 'auth_url' || event.type === 'device_code') && event.url !== undefined) {
-              resolveUrl({ authUrl: event.url, ...event.code === undefined ? {} : { code: event.code } })
+              resolveUrl({
+                authUrl: event.url,
+                ...event.code === undefined ? {} : { code: event.code },
+                ...event.expiresInSeconds === undefined ? {} : { expiresInSeconds: event.expiresInSeconds },
+              })
             }
           },
           prompt(prompt) {
@@ -3441,8 +3445,18 @@ export function createApiProxy(ctx: Context, defaults: ApiProxyDefaults): ApiPro
             rej(new Error(`oauth.begin: timed out waiting for auth_url from provider "${request.payload.providerId}"`))
           }, { once: true })
         })
-        const auth = await Promise.race([urlPromise, timeoutPromise])
-        return ok(request, auth)
+        // A login failure (provider error, rate limit) or the auth-url timeout
+        // rejects the race. Return a structured error the wire delivers as a
+        // normal result, not an unhandled rejection the transport reports as a
+        // 500 with no reason; the client can then show why the connect failed.
+        try {
+          const auth = await Promise.race([urlPromise, timeoutPromise])
+          return ok(request, auth)
+        } catch (error) {
+          const message = error instanceof Error ? error.message : String(error)
+          ctx.logger.warn(`oauth.begin: connect for "${request.payload.providerId}" failed: ${message}`)
+          return err(request, { code: 'internal', message, details: {} })
+        }
       },
     },
 

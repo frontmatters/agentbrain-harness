@@ -167,6 +167,10 @@
             displayName: OpenRouter
             logo: openrouter
             order: 6
+          local:
+            displayName: Local (Ollama)
+            logo: ollama
+            order: 7
 
     - id: session-persistence-jsonl
       name: '@agentbrain-harness/session-persistence-jsonl'

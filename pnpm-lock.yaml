@@ -2616,6 +2616,9 @@ importers:
       '@agentbrain-harness/client-runtime':
         specifier: workspace:^
         version: link:../runtime
+      '@agentbrain-harness/client-ui-primitives':
+        specifier: workspace:^
+        version: link:../ui-primitives
       '@agentbrain-harness/client-ui-settings':
         specifier: workspace:^
         version: link:../ui-settings
@@ -5114,6 +5117,9 @@ importers:
         specifier: ^4.4.3
         version: 4.4.3
     devDependencies:
+      '@agentbrain-harness/agent-presets':
+        specifier: workspace:^
+        version: link:../../preset/agent-presets
       '@agentbrain-harness/brand':
         specifier: workspace:^
         version: link:../../util/brand
@@ -5349,6 +5355,12 @@ importers:
 
   packages/host/plugin-inventory:
     dependencies:
+      '@agentbrain-harness/schemastery':
+        specifier: link:../../../vendor/schemastery
+        version: link:../../../vendor/schemastery
+      js-yaml:
+        specifier: ^4.1.0
+        version: 4.2.0
       zod:
         specifier: ^4.4.3
         version: 4.4.3
@@ -5359,15 +5371,24 @@ importers:
       '@agentbrain-harness/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@agentbrain-harness/cordis-plugin-include':
+        specifier: workspace:^
+        version: link:../../../vendor/include
       '@agentbrain-harness/cordis-plugin-loader':
         specifier: workspace:^
         version: link:../../../vendor/loader
+      '@agentbrain-harness/home-paths':
+        specifier: workspace:^
+        version: link:../../util/home-paths
       '@agentbrain-harness/invariants':
         specifier: workspace:^
         version: link:../../runtime-diagnostics/invariants
       '@agentbrain-harness/typert-protocol':
         specifier: workspace:^
         version: link:../../typert/protocol
+      '@types/js-yaml':
+        specifier: ^4.0.9
+        version: 4.0.9
 
   packages/host/webserver:
     dependencies:

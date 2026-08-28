@@ -189,7 +189,7 @@ describe('oauth domain', () => {
     await expect(interaction().prompt({ type: 'text' })).rejects.toThrow('not supported')
   })
 
-  it('begin rejects when the loginService never emits an auth_url event (timeout)', async () => {
+  it('returns a structured timeout error when the loginService never emits an auth_url event', async () => {
     const loginService: OAuthLoginServiceFace = {
       providers: () => [],
       logout: vi.fn(),
@@ -198,7 +198,22 @@ describe('oauth domain', () => {
       begin: vi.fn().mockReturnValue(new Promise(() => undefined)),
     }
     const api = await harness(loginService, 50)
-    await expect(api.oauth.begin(request({ providerId: 'openai-codex' }))).rejects.toThrow()
+    const error = expectErr(await api.oauth.begin(request({ providerId: 'openai-codex' })))
+    expect(error.code).toBe('internal')
+    expect(error.message).toMatch(/timed out/)
+  })
+
+  it('returns a structured error when the login flow rejects (provider failure, rate limit)', async () => {
+    const loginService: OAuthLoginServiceFace = {
+      providers: () => [],
+      logout: vi.fn(),
+      status: vi.fn(),
+      begin: vi.fn().mockRejectedValue(new Error('device authorization rate limited')),
+    }
+    const api = await harness(loginService)
+    const error = expectErr(await api.oauth.begin(request({ providerId: 'github-copilot' })))
+    expect(error.code).toBe('internal')
+    expect(error.message).toBe('device authorization rate limited')
   })
 
   it('reports an actionable internal error when no loginService is provided (begin)', async () => {

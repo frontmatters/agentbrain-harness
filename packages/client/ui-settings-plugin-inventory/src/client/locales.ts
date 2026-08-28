@@ -20,6 +20,9 @@ export const nl = {
   active: 'Gemount',
   failed: 'Mounten mislukt',
   unloading: 'Unmounten',
+  enable: 'Inschakelen',
+  disable: 'Uitschakelen',
+  toggleHint: 'Wijziging wordt direct toegepast.',
 } satisfies Record<string, string>
 
 /** Plugin inventory locale key union. */
@@ -45,4 +48,7 @@ export const en = {
   active: 'Mounted',
   failed: 'Mount failed',
   unloading: 'Unloading',
+  enable: 'Enable',
+  disable: 'Disable',
+  toggleHint: 'Applied live.',
 } satisfies Record<PluginInventoryLocaleKey, string>

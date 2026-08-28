@@ -20,9 +20,18 @@ export interface PluginInventoryEntry {
   /** Effective Loader enablement, including disabled ancestor groups. */
   readonly enabled: boolean
   readonly fiberPhase: PluginFiberPhase
+  /** Whether the deployment allowlists this entry for GUI enable/disable. */
+  readonly togglable: boolean
 }
 
 /** Point-in-time inventory returned by the plugin inventory Remote. */
 export interface PluginInventorySnapshot {
   readonly entries: readonly PluginInventoryEntry[]
+}
+
+/** Result of a GUI-driven enable/disable write. */
+export interface PluginToggleResult {
+  readonly entryId: PluginEntryId
+  /** The enablement now persisted in the user patch layer. */
+  readonly enabled: boolean
 }

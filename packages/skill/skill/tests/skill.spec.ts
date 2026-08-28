@@ -1041,6 +1041,70 @@ describe('SkillRegistry registry', () => {
     disposeFirst()
     expect(await ctx.skills.get('same-skill')).toBeUndefined()
   })
+
+  it('rejects an invalid skill name in the disabledSkills config and accepts valid names', async () => {
+    await expect(new Context().plugin(SkillRegistry, { disabledSkills: ['Bad_Name'] })).rejects.toThrow('disabledSkills contains invalid skill name')
+
+    const ctx = new Context()
+    await ctx.plugin(SkillRegistry, { disabledSkills: ['disabled-skill'] })
+    registerProvider(ctx, new MemoryProvider([memorySkill('disabled-skill', 'Disabled', 10)]))
+    expect(await ctx.skills.list()).toEqual([])
+    expect(ctx.skills.isEnabled('disabled-skill')).toBe(false)
+  })
+
+  it('threads argumentHint through a runtime registration and through provider candidate validation', async () => {
+    const ctx = new Context()
+    await ctx.plugin(SkillRegistry)
+    ctx.skills.register({
+      name: 'hinted-skill',
+      description: 'Hinted',
+      argumentHint: '<query>',
+      source: 'runtime',
+      content: 'Hinted body.',
+    })
+    const listed = await ctx.skills.list()
+    expect(listed[0]?.argumentHint).toBe('<query>')
+
+    const badHint = new Context()
+    await badHint.plugin(SkillRegistry)
+    registerProvider(badHint, {
+      name: 'bad-hint-provider',
+      list: () => Promise.resolve([{
+        ...memorySkill('bad-hint', 'Bad hint', 1),
+        provider: 'bad-hint-provider',
+        argumentHint: 42 as unknown as string,
+      }]),
+      get: () => Promise.resolve(undefined),
+    })
+    await expect(badHint.skills.list()).rejects.toThrow('non-string argumentHint')
+  })
+
+  it('rejects a non-string argumentHint in a provider-loaded definition', async () => {
+    const ctx = new Context()
+    await ctx.plugin(SkillRegistry)
+    registerProvider(ctx, {
+      name: 'bad-def-hint',
+      list: () => Promise.resolve([{
+        name: 'bad-def-hint-skill',
+        description: 'Candidate',
+        invocation: { modelInvocable: true, userInvocable: true },
+        provider: 'bad-def-hint',
+        source: 'test',
+        rank: 1,
+        locator: 'bad-def-hint',
+      }]),
+      get: () => Promise.resolve({
+        name: 'bad-def-hint-skill',
+        description: 'Definition',
+        invocation: { modelInvocable: true, userInvocable: true },
+        provider: 'bad-def-hint',
+        source: 'test',
+        content: 'Body.',
+        argumentHint: 99 as unknown as string,
+      } as SkillDefinition),
+    })
+    await expect(ctx.skills.get('bad-def-hint-skill')).rejects.toThrow('argumentHint must be a string')
+  })
 })
 
 describe('renderSkillContent', () => {
@@ -1279,5 +1343,11 @@ describe('SkillRegistry scoped layers', () => {
     expect(await ctx.skills.get('policy-skill')).toBeUndefined()
     ctx.skills.setEnabled('policy-skill', true)
     expect((await ctx.skills.list()).map(skill => skill.name)).toEqual(['policy-skill'])
+  })
+
+  it('rejects an invalid skill name passed to setEnabled', async () => {
+    const ctx = new Context()
+    await ctx.plugin(SkillRegistry)
+    expect(() => { ctx.skills.setEnabled('Bad_Name', false) }).toThrow('invalid skill name')
   })
 })

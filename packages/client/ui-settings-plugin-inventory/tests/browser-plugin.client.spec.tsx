@@ -14,9 +14,11 @@ usePinnedBrowserLanguages('nl-CN')
 afterEach(cleanup)
 
 const EMPTY = { entries: [] }
-type ListResult =
-  | { readonly ok: true; readonly value: typeof EMPTY }
+type RpcResult<T = typeof EMPTY> =
+  | { readonly ok: true; readonly value: T }
   | { readonly ok: false; readonly error: { readonly code: string; readonly message: string } }
+// Keep the old name so existing tests compile without changes.
+type ListResult = RpcResult
 
 async function bench() {
   const ctx = new Context()
@@ -31,8 +33,10 @@ async function bench() {
   new RemoteService(ctx)
   const list = vi.fn<() => Promise<ListResult>>()
     .mockResolvedValue({ ok: true, value: EMPTY })
-  ctx.provide('remote.pluginInventory', { list })
-  return { ctx, slots: ctx.get('slots') as SlotRegistry, locale, list }
+  const setEnabled = vi.fn<() => Promise<RpcResult<void>>>()
+    .mockResolvedValue({ ok: true, value: undefined })
+  ctx.provide('remote.pluginInventory', { list, setEnabled })
+  return { ctx, slots: ctx.get('slots') as SlotRegistry, locale, list, setEnabled }
 }
 
 function declare(slots: SlotRegistry): () => void {
@@ -64,6 +68,20 @@ describe('ui-settings-plugin-inventory browser plugin', () => {
     expect(b.list).toHaveBeenCalledOnce()
     b.list.mockResolvedValueOnce({ ok: false, error: { code: 'REMOTE_ERROR', message: 'unavailable' } })
     await expect(injected.list()).rejects.toThrow('pluginInventory.list failed: REMOTE_ERROR: unavailable')
+    await b.ctx.fiber.dispose()
+  })
+
+  it('wires setEnabled and surfaces its Remote error as a thrown Error', async () => {
+    const b = await bench()
+    declare(b.slots)
+    await b.ctx.plugin({ inject: [...inject], apply }).await()
+
+    const injected = (b.slots.entries('settings.plugins.tab')[0]!.inject as unknown as () => PluginInventorySettingsTabInjected)()
+    await expect(injected.setEnabled('entry-id' as never, true)).resolves.toBeUndefined()
+    expect(b.setEnabled).toHaveBeenCalledWith('entry-id', true)
+
+    b.setEnabled.mockResolvedValueOnce({ ok: false, error: { code: 'PERM_DENIED', message: 'not allowed' } })
+    await expect(injected.setEnabled('entry-id' as never, false)).rejects.toThrow('pluginInventory.setEnabled failed: PERM_DENIED: not allowed')
     await b.ctx.fiber.dispose()
   })
 

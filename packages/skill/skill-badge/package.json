@@ -1,7 +1,7 @@
 {
   "name": "@agentbrain-harness/skill-badge",
   "description": "Bundled abh badge skill provider for agentBrain Harness",
-  "version": "0.1.0-rc.8",
+  "version": "0.1.0-rc.9",
   "publishConfig": {
     "access": "public"
   },

@@ -120,7 +120,12 @@ export function createOAuthLoginService(ctx: Context): OAuthLoginServiceFace {
             interaction.notify(
               notice.url === undefined
                 ? { type: 'info' }
-                : { type: notice.code === undefined ? 'auth_url' : 'device_code', url: notice.url, ...notice.code === undefined ? {} : { code: notice.code } })
+                : {
+                  type: notice.code === undefined ? 'auth_url' : 'device_code',
+                  url: notice.url,
+                  ...notice.code === undefined ? {} : { code: notice.code },
+                  ...notice.expiresInSeconds === undefined ? {} : { expiresInSeconds: notice.expiresInSeconds },
+                })
           },
           prompt: prompt => interaction.prompt({
             type: prompt.kind,

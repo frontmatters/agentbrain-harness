@@ -13,7 +13,7 @@ import type { TypertClientRemote } from '@agentbrain-harness/typert-protocol'
 
 export type { TypertClientRemote as ClientRemote } from '@agentbrain-harness/typert-protocol'
 export type { PluginInventorySnapshot } from '@agentbrain-harness/host-plugin-inventory/types'
-export type { AddonInfo, AddonInventorySnapshot, AddonCheckResult, AddonTestResult, AddonMutationResult, SkillInventorySnapshot, ManagedSkillInfo } from '@agentbrain-harness/host-agentbrain-addons/types'
+export type { AddonInfo, AddonInventorySnapshot, AddonCheckResult, AddonTestResult, AddonMutationResult, SkillInventorySnapshot, ManagedSkillInfo, SkillDetail } from '@agentbrain-harness/host-agentbrain-addons/types'
 export type {} from '@agentbrain-harness/commands/remote'
 export type {} from '@agentbrain-harness/file-reference/remote'
 export type {} from '@agentbrain-harness/goal/remote'

@@ -20,7 +20,7 @@
 - button "Settings":
   - img
   - text: Settings
-- text: HMR UPDATED xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx Preview
+- text: Every session starts with a head start. Preview
 - button "Choose workspace":
   - img
   - text: workspace

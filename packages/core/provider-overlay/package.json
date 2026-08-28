@@ -1,7 +1,7 @@
 {
   "name": "@agentbrain-harness/provider-overlay",
   "description": "Default display metadata for account-login providers, shipped as data",
-  "version": "0.1.0-rc.8",
+  "version": "0.1.0-rc.9",
   "publishConfig": {
     "access": "public"
   },

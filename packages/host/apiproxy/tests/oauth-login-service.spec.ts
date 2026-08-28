@@ -74,12 +74,13 @@ describe('createOAuthLoginService', () => {
     const prompt = vi.fn(() => Promise.resolve('browser'))
     const begin = vi.fn(async (request: {
       interaction: {
-        notify: (event: { url?: string }) => void
+        notify: (event: { url?: string; code?: string; expiresInSeconds?: number }) => void
         prompt: (prompt: { kind: string; options?: unknown; signal?: AbortSignal }) => Promise<string>
       }
     }) => {
       request.interaction.notify({ url: 'https://provider/authorize' })
       request.interaction.notify({})
+      request.interaction.notify({ url: 'https://device/verify', code: 'ABCD-5678', expiresInSeconds: 900 })
       await request.interaction.prompt({ kind: 'select', options: [{ id: 'browser' }], signal: new AbortController().signal })
       await request.interaction.prompt({ kind: 'text' })
     })
@@ -89,6 +90,8 @@ describe('createOAuthLoginService', () => {
     expect(begin).toHaveBeenCalledWith(expect.objectContaining({ key: CODEX_KEY, method: 'oauth' }))
     expect(notify).toHaveBeenCalledWith({ type: 'auth_url', url: 'https://provider/authorize' })
     expect(notify).toHaveBeenCalledWith({ type: 'info' })
+    // A device code with a lifetime maps to a device_code event carrying both.
+    expect(notify).toHaveBeenCalledWith({ type: 'device_code', url: 'https://device/verify', code: 'ABCD-5678', expiresInSeconds: 900 })
     expect(prompt).toHaveBeenCalledWith(expect.objectContaining({ type: 'select', options: [{ id: 'browser' }] }))
     expect(prompt).toHaveBeenCalledWith({ type: 'text' })
   })

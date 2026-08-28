@@ -13,10 +13,14 @@ afterEach(cleanup)
 type Snapshot = Awaited<ReturnType<PluginInventorySettingsTabInjected['list']>>
 const t = ((key: PluginInventoryLocaleKey): string => en[key]) as PluginInventorySettingsTabProps['t']
 
-function props(list: PluginInventorySettingsTabInjected['list']): PluginInventorySettingsTabProps {
+function props(
+  list: PluginInventorySettingsTabInjected['list'],
+  setEnabled: PluginInventorySettingsTabInjected['setEnabled'] = () => Promise.resolve(),
+): PluginInventorySettingsTabProps {
   return {
     t,
     list,
+    setEnabled,
   } as PluginInventorySettingsTabProps
 }
 
@@ -123,5 +127,103 @@ describe('PluginInventorySettingsTab', () => {
     const pendingFailure = render(<PluginInventorySettingsTab {...props(() => deferredFailure.promise)} />)
     pendingFailure.unmount()
     await act(async () => { deferredFailure.reject(new Error('late failure')) })
+  })
+})
+
+const TOGGLABLE_SNAPSHOT = {
+  entries: [
+    { entryId: 'tog-on', moduleName: '@fixture/togglable-on', enabled: true, fiberPhase: 'active', togglable: true },
+    { entryId: 'tog-off', moduleName: '@fixture/togglable-off', enabled: false, fiberPhase: null, togglable: true },
+  ],
+} as unknown as Snapshot
+
+describe('PluginInventorySettingsTab toggle', () => {
+  it('disables an enabled togglable entry: setEnabled called, poll converges immediately, state updated', async () => {
+    // After toggle the list returns the entry with enabled already flipped,
+    // so the for-loop condition is false on the first check (attempt 0) and
+    // no setTimeout fires — both loop-condition branches are covered.
+    const afterDisable = {
+      entries: [
+        { entryId: 'tog-on', moduleName: '@fixture/togglable-on', enabled: false, fiberPhase: null, togglable: true },
+        { entryId: 'tog-off', moduleName: '@fixture/togglable-off', enabled: false, fiberPhase: null, togglable: true },
+      ],
+    } as unknown as Snapshot
+    const list = vi.fn<PluginInventorySettingsTabInjected['list']>()
+      .mockResolvedValueOnce(TOGGLABLE_SNAPSHOT)
+      .mockResolvedValue(afterDisable)
+    const setEnabled = vi.fn<PluginInventorySettingsTabInjected['setEnabled']>().mockResolvedValue()
+
+    render(<PluginInventorySettingsTab {...props(list, setEnabled)} />)
+    // Expand the enabled togglable row.
+    const rowBtn = await screen.findByRole('button', { name: 'togglable-on, Mounted, Enabled' })
+    fireEvent.click(rowBtn)
+    // The disable button appears; variant is 'outline' for an enabled entry.
+    expect(screen.getByRole('button', { name: en.disable })).toBeTruthy()
+    // The toggle hint is shown alongside the button.
+    expect(screen.getByText(en.toggleHint)).toBeTruthy()
+
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: en.disable })) })
+    await waitFor(() => { expect(setEnabled).toHaveBeenCalledWith('tog-on', false) })
+    // list() was called once on mount and at least once during the poll.
+    await waitFor(() => { expect(list.mock.calls.length).toBeGreaterThanOrEqual(2) })
+  })
+
+  it('enables a disabled togglable entry: poll loop fires once when first read is stale', async () => {
+    // First post-setEnabled list() still shows enabled=false (stale), so the loop
+    // body (setTimeout + second list()) runs once; the second read reflects the
+    // change and the loop exits — covering lines 113-114 and 116.
+    const singleOff: Snapshot = {
+      entries: [{ entryId: 'tog-off', moduleName: '@fixture/togglable-off', enabled: false, fiberPhase: null, togglable: true }],
+    } as unknown as Snapshot
+    const singleOn: Snapshot = {
+      entries: [{ entryId: 'tog-off', moduleName: '@fixture/togglable-off', enabled: true, fiberPhase: 'active', togglable: true }],
+    } as unknown as Snapshot
+    const list = vi.fn<PluginInventorySettingsTabInjected['list']>()
+      .mockResolvedValueOnce(singleOff)  // initial load
+      .mockResolvedValueOnce(singleOff)  // first poll — stale, enters loop body
+      .mockResolvedValue(singleOn)       // second poll — converged, exits loop
+    const setEnabled = vi.fn<PluginInventorySettingsTabInjected['setEnabled']>().mockResolvedValue()
+
+    render(<PluginInventorySettingsTab {...props(list, setEnabled)} />)
+    // Wait for the initial load to settle with real timers (findByRole uses setTimeout internally).
+    const rowBtn = await screen.findByRole('button', { name: 'togglable-off, Disabled' })
+    fireEvent.click(rowBtn)
+    expect(screen.getByRole('button', { name: en.enable })).toBeTruthy()
+
+    // Switch to fake timers only after the DOM is fully settled.
+    vi.useFakeTimers()
+    try {
+      // Start the toggle; it will suspend at the setTimeout inside the poll loop.
+      const clickAct = act(async () => { fireEvent.click(screen.getByRole('button', { name: en.enable })) })
+      // Drain microtasks so the toggle reaches the setTimeout, then tick past it.
+      await act(async () => { await vi.advanceTimersByTimeAsync(200) })
+      await clickAct
+    } finally {
+      vi.useRealTimers()
+    }
+
+    expect(setEnabled).toHaveBeenCalledWith('tog-off', true)
+    // list called: 1 initial + 1 first poll + 1 second poll = 3.
+    expect(list.mock.calls.length).toBeGreaterThanOrEqual(3)
+  })
+
+  it('catches a setEnabled failure and leaves state ready (busy clears)', async () => {
+    const list = vi.fn<PluginInventorySettingsTabInjected['list']>().mockResolvedValue(TOGGLABLE_SNAPSHOT)
+    const setEnabled = vi.fn<PluginInventorySettingsTabInjected['setEnabled']>()
+      .mockRejectedValue(new Error('write failed'))
+
+    render(<PluginInventorySettingsTab {...props(list, setEnabled)} />)
+    const rowBtn = await screen.findByRole('button', { name: 'togglable-on, Mounted, Enabled' })
+    fireEvent.click(rowBtn)
+
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: en.disable })) })
+    await waitFor(() => { expect(setEnabled).toHaveBeenCalledOnce() })
+    // After the catch the component remains in the ready state (no error alert).
+    await waitFor(() => { expect(screen.queryByRole('alert')).toBeNull() })
+    // busy is cleared: the disable button is no longer disabled.
+    await waitFor(() => {
+      const disableBtn = screen.getByRole('button', { name: en.disable })
+      expect(disableBtn.getAttribute('disabled')).toBeNull()
+    })
   })
 })
