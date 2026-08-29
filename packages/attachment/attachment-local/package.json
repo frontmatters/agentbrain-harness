@@ -1,7 +1,7 @@
 {
   "name": "@agentbrain-harness/attachment-local",
   "description": "Private content-addressed ABH_HOME attachment storage",
-  "version": "0.1.0-rc.9",
+  "version": "0.1.0-rc.10",
   "publishConfig": {
     "access": "public"
   },

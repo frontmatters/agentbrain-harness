@@ -1,0 +1,38 @@
+# Weekly drift check for the pi-ai OAuth callback page branding.
+#
+# apps/cli's postinstall re-brands pi-ai's oauth-page.js only when the installed
+# file matches a vetted original hash. When pi-ai ships a new oauth-page.js the
+# gate silently stops branding. This job fetches the latest @earendil-works/pi-ai
+# and fails when its callback page no longer matches the vetted original, so the
+# branded copy and its hashes get re-vetted before a stale gate ships. It is
+# scheduled, not part of the blocking CI gate, because it tracks a moving
+# upstream and hits the network. It reads no event input, so it carries no
+# workflow-injection surface.
+name: pi-ai oauth drift
+
+on:
+  schedule:
+    - cron: '17 6 * * 1' # Mondays 06:17 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+env:
+  PRIMARY_NODE_VERSION: '24'
+
+jobs:
+  drift:
+    name: check pi-ai oauth page
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.PRIMARY_NODE_VERSION }}
+          cache: pnpm
+      - name: Install (no dependency scripts)
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Check pi-ai oauth page drift
+        run: pnpm run check:pi-ai-oauth-drift

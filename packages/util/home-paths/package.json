@@ -1,7 +1,7 @@
 {
   "name": "@agentbrain-harness/home-paths",
   "description": "Shared filesystem path helpers for the agentBrain Harness",
-  "version": "0.1.0-rc.9",
+  "version": "0.1.0-rc.10",
   "publishConfig": {
     "access": "public"
   },

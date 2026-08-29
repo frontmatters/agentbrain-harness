@@ -1,7 +1,7 @@
 {
   "name": "@agentbrain-harness/spill",
   "description": "Abstract spill storage seam (ctx.spillStore) for the agentBrain Harness — save oversized tool text and return a retrieval locator",
-  "version": "0.1.0-rc.9",
+  "version": "0.1.0-rc.10",
   "publishConfig": {
     "access": "public"
   },

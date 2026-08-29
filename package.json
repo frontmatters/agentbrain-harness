@@ -1,6 +1,6 @@
 {
   "name": "@agentbrain-harness/root",
-  "version": "0.1.0-rc.9",
+  "version": "0.1.0-rc.10",
   "license": "MIT",
   "private": true,
   "type": "module",
@@ -100,6 +100,7 @@
     "verify-runtime-closure": "tsx scripts/verify-runtime-closure.ts",
     "verify-client-packages": "tsx scripts/verify-client-packages.ts",
     "verify-vendored-links": "tsx scripts/verify-vendored-links.ts",
+    "check:pi-ai-oauth-drift": "tsx scripts/check-pi-ai-oauth-drift.ts",
     "verify-cordis-config": "tsx scripts/verify-cordis-config.ts",
     "rescope-vendor": "tsx scripts/rescope-vendor.ts",
     "rescope-vendor:check": "tsx scripts/rescope-vendor.ts --check",

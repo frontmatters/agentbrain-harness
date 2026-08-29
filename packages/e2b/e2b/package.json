@@ -1,7 +1,7 @@
 {
   "name": "@agentbrain-harness/e2b",
   "description": "Shared E2B sandbox lifecycle for agentBrain Harness provider adapters",
-  "version": "0.1.0-rc.9",
+  "version": "0.1.0-rc.10",
   "publishConfig": {
     "access": "public"
   },

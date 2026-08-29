@@ -55,7 +55,9 @@ const releaseMemberDirectory = /^(?:packages\/(?!experimental\/)[^/]+\/[^/]+|app
 
 const localArtifactDirs = new Set(['node_modules'])
 const appPackageFiles: Readonly<Record<string, readonly string[]>> = {
-  '@agentbrain-harness/abh': ['lib/*.js', 'config'],
+  // The postinstall re-brands pi-ai's OAuth callback page for consumers (a pnpm
+  // patch cannot ship); its script and the branded page ride alongside lib.
+  '@agentbrain-harness/abh': ['lib/*.js', 'config', 'postinstall/brand-oauth-page.mjs', 'postinstall/oauth-page.branded.js'],
   // The Web build emits sourcemaps for browser debugging; publishing them is
   // what the payload policy forbids, so the bundle ships without them.
   '@agentbrain-harness/web-frontend': ['dist', '!dist/**/*.map'],

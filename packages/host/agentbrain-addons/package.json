@@ -1,7 +1,7 @@
 {
   "name": "@agentbrain-harness/host-agentbrain-addons",
   "description": "Typert Remote gateway for agentBrain addon management",
-  "version": "0.1.0-rc.9",
+  "version": "0.1.0-rc.10",
   "publishConfig": { "access": "public" },
   "repository": { "type": "git", "url": "git+https://github.com/frontmatters/agentbrain-harness.git", "directory": "packages/host/agentbrain-addons" },
   "type": "module",
