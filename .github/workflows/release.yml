@@ -120,6 +120,13 @@ jobs:
       cancel-in-progress: false
     permissions:
       contents: read
+      # OIDC trusted publishing: npm exchanges this GitHub-issued id-token for a
+      # short-lived, package-scoped publish token. No long-lived npm token is
+      # stored. Each package's trusted-publisher config must name this repo, the
+      # `release.yml` workflow, and the `npm-publish` environment; configure it
+      # once with scripts/release/trust-github.sh. Publishing from a public repo
+      # over OIDC also attaches provenance automatically.
+      id-token: write
     steps:
       # Checkout and install carry the release scripts only. There is no build
       # step: publication uploads the bytes the pack job produced.
@@ -136,6 +143,11 @@ jobs:
           node-version: ${{ env.PRIMARY_NODE_VERSION }}
           registry-url: https://registry.npmjs.org
 
+      # OIDC trusted publishing needs npm >= 11.5.1; the exchange is a no-op on
+      # older npm and would fall back to a token that is no longer provided.
+      - name: Ensure npm supports OIDC trusted publishing
+        run: npm install -g npm@latest
+
       - name: Install (immutable, no package scripts)
         run: pnpm install --frozen-lockfile --ignore-scripts
 
@@ -144,7 +156,8 @@ jobs:
           name: abh-npm-tarballs
           path: dist/npm
 
+      # No NODE_AUTH_TOKEN: publication authenticates over OIDC against each
+      # package's trusted-publisher config. `release:publish` shells out to the
+      # global `npm publish`, which performs the exchange.
       - name: Publish tarballs
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: pnpm run release:publish --family abh --from dist/npm

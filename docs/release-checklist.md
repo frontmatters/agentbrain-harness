@@ -44,7 +44,7 @@ pnpm run test:web
 ## Registry and GitHub configuration
 
 - [ ] The `@agentbrain-harness` npm scope is owned by the publishing account.
-- [ ] npm trusted publishing or the GitHub `NPM_TOKEN` secret is configured.
+- [ ] Trusted publishing is configured on every published package: run [`trust-github.sh`](../scripts/release/trust-github.sh) once as an org owner. It pins this repository, the `release.yml` workflow, and the `npm-publish` environment as each package's trusted publisher, so the workflow publishes over OIDC with no stored npm token. A newly added package needs a trust config before its first publish; re-run the script.
 - [ ] The GitHub `npm-publish` environment has its required reviewers and protection rules.
 - [ ] The repository can publish public scoped packages.
 

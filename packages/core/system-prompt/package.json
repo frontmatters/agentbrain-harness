@@ -1,7 +1,7 @@
 {
   "name": "@agentbrain-harness/system-prompt",
   "description": "System prompt assembly registry for the agentBrain Harness",
-  "version": "0.1.0-rc.10",
+  "version": "0.1.0-rc.12",
   "publishConfig": {
     "access": "public"
   },

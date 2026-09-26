@@ -1,7 +1,7 @@
 {
   "name": "@agentbrain-harness/fs-e2b",
   "description": "E2B filesystem implementation for agentBrain Harness",
-  "version": "0.1.0-rc.10",
+  "version": "0.1.0-rc.12",
   "publishConfig": {
     "access": "public"
   },

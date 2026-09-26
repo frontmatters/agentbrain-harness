@@ -1,7 +1,7 @@
 {
   "name": "@agentbrain-harness/agentbrain-context",
   "description": "Canonical AgentBrain rules, preferences, and project context for ABH sessions",
-  "version": "0.1.0-rc.10",
+  "version": "0.1.0-rc.12",
   "publishConfig": { "access": "public" },
   "repository": { "type": "git", "url": "git+https://github.com/frontmatters/agentbrain-harness.git", "directory": "packages/context/agentbrain-context" },
   "type": "module",

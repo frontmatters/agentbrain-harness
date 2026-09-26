@@ -1,7 +1,7 @@
 {
   "name": "@agentbrain-harness/host-directory-picker",
   "description": "Abstract workspace-directory picking seam (ctx.directoryPicker) for the agentBrain Harness web GUI host",
-  "version": "0.1.0-rc.10",
+  "version": "0.1.0-rc.12",
   "publishConfig": {
     "access": "public"
   },

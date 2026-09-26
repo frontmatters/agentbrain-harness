@@ -30,6 +30,21 @@ const INLINE_CSS_VIRTUAL_PREFIX = '\0dsh-inline-css:'
 const CSS_VIRTUAL_SUFFIX = '.mjs'
 const INLINE_CSS_QUERY = '?inline'
 
+/**
+ * A stylesheet's virtual id carries its repository-relative path, never the
+ * absolute one. Rolldown writes each module id into the `//#region` comment of
+ * the bundle, so an absolute id published the build machine's home directory in
+ * every client package (npm 0.1.0-rc.8 to rc.10).
+ */
+function virtualCssId(prefix: string, stylesheet: string): string {
+  return prefix + relative(REPOSITORY_ROOT, resolvePath(stylesheet)).split(sep).join('/') + CSS_VIRTUAL_SUFFIX
+}
+
+/** The physical stylesheet behind a virtual id from {@link virtualCssId}. */
+function physicalCssPath(prefix: string, virtualId: string): string {
+  return resolvePath(REPOSITORY_ROOT, virtualId.slice(prefix.length, -CSS_VIRTUAL_SUFFIX.length))
+}
+
 /** Emit one plugin-owned style injector and an optional CSS Modules export. */
 function styleInjectionModule(
   id: string,
@@ -502,11 +517,11 @@ function clientConfig(id: string, entry: string): UserConfig {
       resolveId(source: string, importer: string | undefined) {
         if (!source.endsWith('.module.css')) return null
         const abs = importer !== undefined ? sourceAssetPath(source, importer) : source
-        return CSS_VIRTUAL_PREFIX + abs + CSS_VIRTUAL_SUFFIX
+        return virtualCssId(CSS_VIRTUAL_PREFIX, abs)
       },
       async load(virtualId: string) {
         if (!virtualId.startsWith(CSS_VIRTUAL_PREFIX)) return null
-        const fileId = virtualId.slice(CSS_VIRTUAL_PREFIX.length, -CSS_VIRTUAL_SUFFIX.length)
+        const fileId = physicalCssPath(CSS_VIRTUAL_PREFIX, virtualId)
         // The virtual id otherwise hides the physical stylesheet from Rolldown's watch graph.
         this.addWatchFile(fileId)
         const source = await readFile(fileId)
@@ -528,11 +543,11 @@ function clientConfig(id: string, entry: string): UserConfig {
         if (!source.endsWith(`.css${INLINE_CSS_QUERY}`)) return null
         const stylesheet = source.slice(0, -INLINE_CSS_QUERY.length)
         const abs = importer !== undefined ? sourceAssetPath(stylesheet, importer) : stylesheet
-        return INLINE_CSS_VIRTUAL_PREFIX + abs + CSS_VIRTUAL_SUFFIX
+        return virtualCssId(INLINE_CSS_VIRTUAL_PREFIX, abs)
       },
       async load(virtualId: string) {
         if (!virtualId.startsWith(INLINE_CSS_VIRTUAL_PREFIX)) return null
-        const fileId = virtualId.slice(INLINE_CSS_VIRTUAL_PREFIX.length, -CSS_VIRTUAL_SUFFIX.length)
+        const fileId = physicalCssPath(INLINE_CSS_VIRTUAL_PREFIX, virtualId)
         this.addWatchFile(fileId)
         const source = await readFile(fileId)
         const { code } = transform({ filename: fileId, code: source, minify: true })
@@ -543,11 +558,11 @@ function clientConfig(id: string, entry: string): UserConfig {
       resolveId(source: string, importer: string | undefined) {
         if (!source.endsWith('.css') || source.endsWith('.module.css')) return null
         const abs = importer !== undefined ? sourceAssetPath(source, importer) : source
-        return GLOBAL_CSS_VIRTUAL_PREFIX + abs + CSS_VIRTUAL_SUFFIX
+        return virtualCssId(GLOBAL_CSS_VIRTUAL_PREFIX, abs)
       },
       async load(virtualId: string) {
         if (!virtualId.startsWith(GLOBAL_CSS_VIRTUAL_PREFIX)) return null
-        const fileId = virtualId.slice(GLOBAL_CSS_VIRTUAL_PREFIX.length, -CSS_VIRTUAL_SUFFIX.length)
+        const fileId = physicalCssPath(GLOBAL_CSS_VIRTUAL_PREFIX, virtualId)
         this.addWatchFile(fileId)
         const source = await readFile(fileId)
         const { code } = transform({ filename: fileId, code: source, minify: true })

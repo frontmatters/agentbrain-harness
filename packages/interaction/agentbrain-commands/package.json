@@ -1,7 +1,7 @@
 {
   "name": "@agentbrain-harness/agentbrain-commands",
   "description": "AgentBrain skill-to-command-palette bridge for agentBrain Harness",
-  "version": "0.1.0-rc.10",
+  "version": "0.1.0-rc.12",
   "publishConfig": { "access": "public" },
   "repository": { "type": "git", "url": "git+https://github.com/frontmatters/agentbrain-harness.git", "directory": "packages/interaction/agentbrain-commands" },
   "type": "module",
