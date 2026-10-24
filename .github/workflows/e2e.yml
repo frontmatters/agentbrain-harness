@@ -6,7 +6,7 @@ name: E2E (real DeepSeek API)
 # https://api.deepseek.com (DEEPSEEK_BASE_URL is pinned to it explicitly so a
 # stray repo-root .env can't redirect the run).
 #
-# pull_request IS a trigger, but GitHub withholds repo secrets from BOTH forked
+# When pull_request is restored, GitHub withholds repo secrets from BOTH forked
 # PRs and Dependabot PRs (the latter are same-repo, fork==false, but still
 # keyless). The job-level `if:` below skips the whole job for those untrusted
 # PRs. The Dependabot test keys on the PR AUTHOR (pull_request.user.login), not
@@ -17,24 +17,20 @@ name: E2E (real DeepSeek API)
 # job skipped by a job-level `if:` reports as a SUCCESSFUL check, so this
 # workflow is safe to use as a required status check if desired.
 #
-# SECURITY — NEVER change this trigger to `pull_request_target`. `pull_request`
-# checks out and runs the PR's HEAD code WITHOUT secrets for forks, which is what
+# SECURITY — NEVER add `pull_request_target`. `pull_request` checks out and
+# runs the PR's HEAD code WITHOUT secrets for forks, which is what
 # keeps an untrusted fork from exfiltrating the key. `pull_request_target` runs
 # in the BASE repo's context WITH secrets while still able to check out untrusted
 # fork code — a textbook key-leak vector, especially once this repo is public.
 # The fork/secret model and its public-repo implications are recorded in
 # .agents/notes/implemented/testing/2026-06-19-real-api-e2e-ci.md.
 #
-# Note: scheduled triggers are auto-disabled after 60 days of repo inactivity;
-# push/pull_request/workflow_dispatch act as backstops.
+# No Actions secret is currently provisioned for this repository. Keep the
+# with-key lane manual until DEEPSEEK_API_KEY_EXTERNAL is configured; automatic
+# runs would fail at preflight before running any API tests. Restore the
+# push/pull_request/schedule triggers after a manual run passes with a real key.
 on:
   workflow_dispatch:
-  push:
-    branches: [main, master]
-  pull_request:
-  schedule:
-    # 00:17 UTC nightly = 08:17 Asia/Shanghai — off the top-of-hour cron stampede.
-    - cron: '17 0 * * *'
 
 # Cancel a superseded PR run (it is on a stale commit); never cancel a
 # push/schedule run — it is already producing the post-merge/nightly signal.
@@ -55,7 +51,7 @@ jobs:
   e2e:
     runs-on: ubuntu-latest
     name: e2e
-    # Run on every trusted event. Skip untrusted PRs (forks + Dependabot) where
+    # For future PR triggers: skip untrusted PRs (forks + Dependabot) where
     # the secret is withheld — they would otherwise hard-fail the preflight.
     if: >-
       github.event_name != 'pull_request'

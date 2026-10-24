@@ -241,6 +241,7 @@ describe('E2B e2e workflow', () => {
 describe('DeepSeek e2e workflow', () => {
   it('prepares bubblewrap from the pinned payload without a package transaction', () => {
     const workflow = loadWorkflow('.github/workflows/e2e.yml')
+    expect(workflow.on).toEqual({ workflow_dispatch: null }) // No automatic runs until the CI key is provisioned.
     const e2e = workflowJob(workflow, 'e2e')
     if (!Array.isArray(e2e.steps)) throw new TypeError('DeepSeek e2e workflow must define steps')
 
@@ -249,6 +250,15 @@ describe('DeepSeek e2e workflow', () => {
       run: 'bash scripts/prepare-ci-bubblewrap.sh',
     })
     expect(JSON.stringify(steps)).not.toContain('apt-get')
+  })
+
+  it('pins bubblewrap to a snapshot rather than the rotating Ubuntu package pool', () => {
+    const script = readFileSync(resolve(root, 'scripts/prepare-ci-bubblewrap.sh'), 'utf8')
+    expect(script).toMatch(/readonly BUBBLEWRAP_SNAPSHOT='\d{8}T\d{6}Z'/)
+    expect(script).toMatch(/readonly BUBBLEWRAP_SHA256='[0-9a-f]{64}'/)
+    expect(script).toContain('https://snapshot.ubuntu.com/ubuntu/${BUBBLEWRAP_SNAPSHOT}/pool/')
+    expect(script).toContain('sha256sum --check --status')
+    expect(script).not.toContain('https://archive.ubuntu.com/ubuntu/pool/')
   })
 })
 
