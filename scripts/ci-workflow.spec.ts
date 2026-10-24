@@ -250,6 +250,15 @@ describe('DeepSeek e2e workflow', () => {
     })
     expect(JSON.stringify(steps)).not.toContain('apt-get')
   })
+
+  it('pins bubblewrap to a snapshot rather than the rotating Ubuntu package pool', () => {
+    const script = readFileSync(resolve(root, 'scripts/prepare-ci-bubblewrap.sh'), 'utf8')
+    expect(script).toMatch(/readonly BUBBLEWRAP_SNAPSHOT='\d{8}T\d{6}Z'/)
+    expect(script).toMatch(/readonly BUBBLEWRAP_SHA256='[0-9a-f]{64}'/)
+    expect(script).toContain('https://snapshot.ubuntu.com/ubuntu/${BUBBLEWRAP_SNAPSHOT}/pool/')
+    expect(script).toContain('sha256sum --check --status')
+    expect(script).not.toContain('https://archive.ubuntu.com/ubuntu/pool/')
+  })
 })
 
 describe('Python release workflows', () => {
