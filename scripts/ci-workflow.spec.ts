@@ -241,6 +241,7 @@ describe('E2B e2e workflow', () => {
 describe('DeepSeek e2e workflow', () => {
   it('prepares bubblewrap from the pinned payload without a package transaction', () => {
     const workflow = loadWorkflow('.github/workflows/e2e.yml')
+    expect(workflow.on).toEqual({ workflow_dispatch: null }) // No automatic runs until the CI key is provisioned.
     const e2e = workflowJob(workflow, 'e2e')
     if (!Array.isArray(e2e.steps)) throw new TypeError('DeepSeek e2e workflow must define steps')
 
